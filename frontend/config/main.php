@@ -10,6 +10,8 @@ return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'sourceLanguage' => 'en-US',
+    'language' => 'uz',
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
@@ -44,7 +46,21 @@ return [
             'rules' => [
             ],
         ],
-
+        'i18n' => [
+            'translations' => [
+                'app*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/messages',
+                    'fileMap' => [
+                        'app' => 'app.php',
+                        'app/error' => 'error.php',
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'as beforeRequest' => [
+        'class' => 'common\components\i18n\Language'
     ],
     'params' => $params,
 ];

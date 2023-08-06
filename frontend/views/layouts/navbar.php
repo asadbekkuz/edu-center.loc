@@ -20,18 +20,18 @@ use yii\helpers\Url;
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                class="nav-link dropdown-toggle">
                 <?='<img src="'.Url::base().'/images/flag/'.Yii::$app->language.'.png" 
-                alt="'.Yii::$app->language.'" style="width:25px">'.ucfirst(Yii::t('app', 'language'))?>
+                alt="'.Yii::$app->language.'" style="width:25px">'?>
             </a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
                 <?php
-                foreach (Yii::$app->params['language'] as $key=>$value){
+                foreach (Yii::$app->params['language'] as $key => $value){
                     ?>
 
                     <?php
-                    $tilFlag = '<img src="'.Url::base().'/images/flag/'.$key.'.png" alt="'.Yii::$app->language.'" style="width:25px">'
+                        $tilFlag = '<img src="'.Url::base().'/images/flag/'.$key.'.png" alt="'.Yii::$app->language.'" style="width:25px">'
                     ?>
                     <li>
-                        <?php echo Html::a($tilFlag.$value, ['/site/change-lang','lang'=>$key ], [ 'class' => 'dropdown-item']) ?>
+                        <?php echo Html::a($tilFlag,Url::to(['site/lang','lang'=>$key]), [ 'class' => 'dropdown-item']) ?>
                     </li>
                     <?php
                 }

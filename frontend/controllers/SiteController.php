@@ -256,4 +256,18 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
+    
+    public function actionLang($lang)
+    {
+        if(Yii::$app->request->isGet)
+        {
+            $lang = Yii::$app->request->get('lang');
+            if(array_key_exists($lang,Yii::$app->params['language']))
+            {
+                Yii::$app->session->set('language',$lang);
+                return $this->redirect(Yii::$app->request->referrer);
+            }
+        }
+        return $this->redirect('site/index');
+    }
 }
