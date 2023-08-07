@@ -14,7 +14,7 @@ return [
     'interactive' => true,
     'help' => false,
     'silentExitOnException' => null,
-    'sourcePath' => '@common',
+    'sourcePath' =>'@frontend',
     'messagePath' => '@common/messages',
     'languages' => [
         'uz','en','ru'
