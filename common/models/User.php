@@ -2,26 +2,35 @@
 
 namespace common\models;
 
+use frontend\models\Course;
+use frontend\models\Group;
+use frontend\models\Science;
+use frontend\models\Student;
+use frontend\models\Teacher;
 use Yii;
 use yii\base\NotSupportedException;
+use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
- * User model
+ * This is the model class for table "user".
  *
- * @property integer $id
+ * @property int $id
  * @property string $username
- * @property string $password_hash
- * @property string $password_reset_token
- * @property string $verification_token
- * @property string $email
+ * @property string $first_name
+ * @property string $last_name
+ * @property string|null $phone
+ * @property string|null $address
  * @property string $auth_key
- * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
- * @property string $password write-only password
+ * @property string $password_hash
+ * @property string|null $password_reset_token
+ * @property string $email
+ * @property int $status
+ * @property int $created_at
+ * @property int $updated_at
+ * @property string|null $verification_token
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -51,13 +60,24 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
+    /**
+     * {@inheritdoc}
+     */
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_INACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            [['username', 'first_name', 'last_name','password_hash', 'email','phone','address'], 'required'],
+            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['username', 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
+            [['first_name', 'last_name', 'phone'], 'string', 'max' => 100],
+            [['address'], 'string', 'max' => 250],
+            [['auth_key'], 'string', 'max' => 32],
+            [['username'], 'unique'],
+            [['email'], 'unique'],
+            [['password_reset_token'], 'unique'],
         ];
     }
+
 
     /**
      * {@inheritdoc}
@@ -209,5 +229,30 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public static function getStatusLabels(): array
+    {
+        return [
+            self::STATUS_DELETED => Yii::t('app','DELETED'),
+            self::STATUS_INACTIVE => Yii::t('app','INACTIVE'),
+            self::STATUS_ACTIVE => Yii::t('app','ACTIVE'),
+        ];
+    }
+
+    public function showStatus($status)
+    {
+        $badge = '<span class="badge badge-dark">UNKOWN</span>';
+        if($status == '0')
+        {
+            $badge = '<span class="badge badge-danger">DELETED</span>';
+        }elseif($status == '9')
+        {
+            $badge = '<span class="badge badge-secondary">INACTIVE</span>';
+        }elseif($status == '10')
+        {
+            $badge = '<span class="badge badge-success">ACTIVE</span>';
+        }
+        return $badge;
     }
 }
