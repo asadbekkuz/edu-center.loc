@@ -28,7 +28,7 @@ use yii\helpers\Url;
                     ?>
 
                     <?php
-                        $tilFlag = '<img src="'.Url::base().'/images/flag/'.$key.'.png" alt="'.Yii::$app->language.'" style="width:25px">'
+                        $tilFlag = '<img src="'.Url::base().'/images/flag/'.$key.'.png" alt="'.Yii::$app->language.'" style="width:25px"><span class="ml-2">'.$value.'</span>'
                     ?>
                     <li>
                         <?php echo Html::a($tilFlag,Url::to(['site/lang','lang'=>$key]), [ 'class' => 'dropdown-item']) ?>

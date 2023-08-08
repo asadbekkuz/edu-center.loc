@@ -4,10 +4,10 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
-/** @var common\models\User $model */
+/** @var \frontend\models\Course $model */
 
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'User'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Course'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -28,12 +28,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= DetailView::widget([
                 'model' => $model,
                 'attributes' => [
-                    'username',
-                    'first_name',
-                    'last_name',
-                    'phone',
-                    'address',
-                    'email',
+                    'name',
+                    'science_id',
+                    'teacher_id',
+                    'room_id',
+                    'price',
+                    'capacity',
                     [
                         'attribute' => 'status',
                         'value' => fn($model) => $model->showStatus($model->status),
@@ -41,6 +41,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     'created_at',
                     'updated_at',
+                    'created_by',
+                    'updated_by'
                 ],
             ]) ?>
         </div>

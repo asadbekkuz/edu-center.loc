@@ -2,7 +2,12 @@
 
 namespace frontend\models;
 
+use common\components\db\CustomActiveRecord;
+use common\models\User;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "course".
@@ -27,8 +32,11 @@ use Yii;
  * @property Teacher $teacher
  * @property User $updatedBy
  */
-class Course extends \yii\db\ActiveRecord
+class Course extends CustomActiveRecord
 {
+    const STATUS_DELETED = 0;
+    const STATUS_INACTIVE = 9;
+    const STATUS_ACTIVE = 10;
     /**
      * {@inheritdoc}
      */
@@ -36,7 +44,37 @@ class Course extends \yii\db\ActiveRecord
     {
         return 'course';
     }
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+            BlameableBehavior::class
+        ];
+    }
 
+    public static function getStatusLabels(): array
+    {
+        return [
+            self::STATUS_DELETED => Yii::t('app','DELETED'),
+            self::STATUS_INACTIVE => Yii::t('app','INACTIVE'),
+            self::STATUS_ACTIVE => Yii::t('app','ACTIVE'),
+        ];
+    }
+    public function showStatus($status)
+    {
+        $badge = '<span class="badge badge-dark">UNKOWN</span>';
+        if($status == '0')
+        {
+            $badge = '<span class="badge badge-danger">DELETED</span>';
+        }elseif($status == '9')
+        {
+            $badge = '<span class="badge badge-secondary">INACTIVE</span>';
+        }elseif($status == '10')
+        {
+            $badge = '<span class="badge badge-success">ACTIVE</span>';
+        }
+        return $badge;
+    }
     /**
      * {@inheritdoc}
      */

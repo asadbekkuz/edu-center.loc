@@ -3,6 +3,8 @@
 namespace frontend\controllers;
 
 use frontend\models\Course;
+use Yii;
+use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\data\Sort;
 
@@ -12,12 +14,14 @@ class CourseController extends \yii\web\Controller
     {
         $newModel = new Course();
         $query = Course::find();
-        $pagination = new Pagination([
-            'totalCount' => $query->count(),
-            'defaultPageSize' => 5
-        ]);
-        $sort = new Sort([
-            'attributes' => [
+        $dp = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'totalCount' => $query->count(),
+                'defaultPageSize' => 5
+            ],
+            'sort' => [
+                'attributes' => [
                 'name',
                 'science_id',
                 'teacher_id',
@@ -27,15 +31,33 @@ class CourseController extends \yii\web\Controller
                 'created_by',
                 'updated_by'
             ]
+            ]
         ]);
-
-        $model = $query->orderBy($sort->orders)->offset($pagination->offset)->limit($pagination->limit)->all();
+//        $pagination = new Pagination([
+//            'totalCount' => $query->count(),
+//            'defaultPageSize' => 5
+//        ]);
+//        $sort = new Sort([
+//            'attributes' => [
+//                'name',
+//                'science_id',
+//                'teacher_id',
+//                'price',
+//                'capacity',
+//                'status',
+//                'created_by',
+//                'updated_by'
+//            ]
+//        ]);
+//
+//        $model = $query->orderBy($sort->orders)->offset($pagination->offset)->limit($pagination->limit)->all();
 
         return $this->render('index', [
-            'model' => $model,
-            'sort' => $sort,
-            'pagination' => $pagination,
-            'newModel' => $newModel
+//            'model' => $model,
+//            'sort' => $sort,
+//            'pagination' => $pagination,
+            'newModel' => $newModel,
+            'dp' => $dp
         ]);
     }
 

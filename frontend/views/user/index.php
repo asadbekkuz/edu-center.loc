@@ -14,7 +14,7 @@ use yii\helpers\Url;
 
         <p>
             <button class="btn btn-outline-success" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                <i class="fas fa-edit"></i> <?= Yii::t('app','Create Post');?>
+                <i class="fas fa-plus"></i> <?= Yii::t('app','Create User');?>
             </button>
         </p>
 

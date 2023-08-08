@@ -2,6 +2,8 @@
 
 namespace frontend\models;
 
+use common\components\db\CustomActiveRecord;
+use common\models\User;
 use Yii;
 
 /**
@@ -21,7 +23,7 @@ use Yii;
  * @property Student $student
  * @property User $updatedBy
  */
-class Group extends \yii\db\ActiveRecord
+class Group extends CustomActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -30,6 +32,7 @@ class Group extends \yii\db\ActiveRecord
     {
         return 'group';
     }
+
 
     /**
      * {@inheritdoc}

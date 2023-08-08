@@ -1,9 +1,9 @@
 <?php
 
-/** @var $model \common\models\User */
-/** @var $newModel \common\models\User */
-/** @var $pagination \yii\data\Pagination */
-/** @var $sort  \yii\data\Sort */
+/** @var $model \frontend\models\Course */
+/** @var $newModel \frontend\models\Course */
+/** @var $dp \yii\data\ActiveDataProvider */
+
 
 use yii\bootstrap5\LinkPager;
 use yii\helpers\Url;
@@ -14,7 +14,7 @@ use yii\helpers\Url;
 
         <p>
             <button class="btn btn-outline-success" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                <i class="fas fa-edit"></i> <?= Yii::t('app','Create Post');?>
+                <i class="fas fa-plus"></i> <?= Yii::t('app','Create Course');?>
             </button>
         </p>
 
@@ -30,27 +30,31 @@ use yii\helpers\Url;
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th><?= Yii::t('app',$sort->link('username'));?></th>
-                <th><?= Yii::t('app',$sort->link('first_name'));?></th>
-                <th><?= Yii::t('app',$sort->link('last_name'));?></th>
-                <th><?= Yii::t('app',$sort->link('phone'));?></th>
-                <th><?= Yii::t('app',$sort->link('status'));?></th>
+                <th><?= Yii::t('app',$dp->sort->link('name'));?></th>
+                <th><?= Yii::t('app',$dp->sort->link('science_id'));?></th>
+                <th><?= Yii::t('app',$dp->sort->link('teacher_id'));?></th>
+                <th><?= Yii::t('app',$dp->sort->link('price'));?></th>
+                <th><?= Yii::t('app',$dp->sort->link('status'));?></th>
+                <th><?= Yii::t('app',$dp->sort->link('created_by'));?></th>
+                <th><?= Yii::t('app',$dp->sort->link('updated_by'));?></th>
                 <th><a href="javascript:void(0)">Actions</a></th>
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($model as $value): ?>
+            <?php foreach ($dp->getModels() as $value): ?>
                 <tr>
-                    <td><?= $value->username ?></td>
-                    <td><?= $value->first_name ?></td>
-                    <td><?= $value->last_name ?></td>
-                    <td><?= $value->phone ?></td>
-                    <td><?= $value->showStatus($value->status) ?></td>
+                    <td><?= $value->name ?></td>
+                    <td><?= $value->science_id ?></td>
+                    <td><?= $value->teacher_id ?></td>
+                    <td><?= $value->price ?></td>
+                    <td><?= $value->status ?></td>
+                    <td><?= $value->created_by ?></td>
+                    <td><?= $value->updated_by ?></td>
 
                     <td style="display: flex;">
-                        <a href="<?= Url::to(['user/update','id'=>$value->id])?>" class="btn btn-outline-info"><i class="fas fa-pen"></i></a>
-                        <a href="<?= Url::to(['user/delete','id'=>$value->id])?>" class="btn btn-outline-danger mx-2"><i class="fas fa-trash"></i></a>
-                        <a href="<?= Url::to(['user/view','id'=>$value->id])?>" class="btn btn-outline-success"><i class="fas fa-eye"></i></a>
+                        <a href="<?= Url::to(['course/update','id'=>$value->id])?>" class="btn btn-outline-info"><i class="fas fa-pen"></i></a>
+                        <a href="<?= Url::to(['course/delete','id'=>$value->id])?>" class="btn btn-outline-danger mx-2"><i class="fas fa-trash"></i></a>
+                        <a href="<?= Url::to(['course/view','id'=>$value->id])?>" class="btn btn-outline-success"><i class="fas fa-eye"></i></a>
                     </td>
 
                 </tr>
@@ -63,7 +67,7 @@ use yii\helpers\Url;
 <?php
 
 echo LinkPager::widget([
-    'pagination' =>$pagination,
+    'pagination' =>$dp->pagination,
     'options' => [
         'class' => 'mt-2'
     ]
