@@ -2,17 +2,10 @@
 
 namespace common\models;
 
-use common\components\db\CustomActiveRecord;
-use frontend\models\Course;
-use frontend\models\Group;
-use frontend\models\Science;
-use frontend\models\Student;
-use frontend\models\Teacher;
 use Yii;
+use common\components\db\CustomActiveRecord;
 use yii\base\NotSupportedException;
-use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
@@ -25,6 +18,7 @@ use yii\web\IdentityInterface;
  * @property string|null $phone
  * @property string|null $address
  * @property string $auth_key
+ * @property string $password
  * @property string $password_hash
  * @property string|null $password_reset_token
  * @property string $email
@@ -63,9 +57,9 @@ class User extends CustomActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'first_name', 'last_name','password_hash', 'email','phone','address'], 'required'],
+            [['username','password', 'email'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
+            [['username', 'password_hash','password', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
             [['first_name', 'last_name', 'phone'], 'string', 'max' => 100],
             [['address'], 'string', 'max' => 250],
             [['auth_key'], 'string', 'max' => 32],
@@ -183,8 +177,7 @@ class User extends CustomActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        return true;
-//        return Yii::$app->security->validatePassword($password, $this->password_hash);
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
     /**
