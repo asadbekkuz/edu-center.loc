@@ -2,35 +2,18 @@
 
 namespace frontend\controllers;
 
+use Yii;
 use frontend\models\Science;
 use frontend\models\search\ScienceSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * ScienceController implements the CRUD actions for Science model.
  */
 class ScienceController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-    }
-
     /**
      * Lists all Science models.
      *
@@ -50,63 +33,65 @@ class ScienceController extends Controller
     /**
      * Displays a single Science model.
      * @param int $id ID
-     * @return string
+     * @return array
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $response['status'] = false;
+        $response['content'] = $this->renderAjax('view', ['model' => $this->findModel($id)]);
+        return $response;
     }
 
     /**
      * Creates a new Science model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return string|Response | array
      */
     public function actionCreate()
     {
         $model = new Science();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $response['status'] = false;
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->save()) {
+                    $response['status'] = true;
+                }
             }
-        } else {
-            $model->loadDefaultValues();
+            $response['content'] = $this->renderAjax('create', ['model' => $model]);
+            return $response;
+        }else{
+            return $this->redirect('index');
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
      * Updates an existing Science model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
-     * @return string|\yii\web\Response
+     * @return array|Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $model = $this->findModel($id);
-
+        $response['status'] = false;
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $response['status'] = true;
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        $response['content'] =  $this->renderAjax('update', ['model' => $model]);
+        return $response;
     }
 
     /**
      * Deletes an existing Science model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)

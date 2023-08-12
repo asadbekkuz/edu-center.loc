@@ -36,7 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
             Modal::end(); ?>
             <?php Pjax::begin(['id' => 'pjaxGrid']); ?>
-            <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,

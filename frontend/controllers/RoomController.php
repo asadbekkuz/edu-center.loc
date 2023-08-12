@@ -15,23 +15,6 @@ use yii\filters\VerbFilter;
  */
 class RoomController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-
-                    ],
-                ],
-            ]
-        );
-    }
 
     /**
      * Lists all Room models.
