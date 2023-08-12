@@ -3,7 +3,8 @@
 namespace frontend\controllers;
 
 use frontend\models\Teacher;
-use yii\data\ActiveDataProvider;
+use frontend\models\TeacherSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,23 +14,6 @@ use yii\filters\VerbFilter;
  */
 class TeacherController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-    }
 
     /**
      * Lists all Teacher models.
@@ -38,21 +22,11 @@ class TeacherController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Teacher::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $searchModel = new TeacherSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -60,56 +34,57 @@ class TeacherController extends Controller
     /**
      * Displays a single Teacher model.
      * @param int $id ID
-     * @return string
+     * @return array
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $response['status'] = false;
+        $response['content'] = $this->renderAjax('view', ['model' => $this->findModel($id)]);
+        return $response;
     }
 
     /**
      * Creates a new Teacher model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return array|\yii\web\Response
      */
     public function actionCreate()
     {
         $model = new Teacher();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $response['status'] = false;
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->save()) {
+                    $response['status'] = true;
+                }
             }
-        } else {
-            $model->loadDefaultValues();
+            $response['content'] = $this->renderAjax('create', ['model' => $model]);
+            return $response;
+        }else{
+            return $this->redirect('index');
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
      * Updates an existing Teacher model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
-     * @return string|\yii\web\Response
+     * @return array|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $model = $this->findModel($id);
-
+        $response['status'] = false;
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $response['status'] = true;
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        $response['content'] =  $this->renderAjax('update', ['model' => $model]);
+        return $response;
     }
 
     /**

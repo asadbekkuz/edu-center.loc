@@ -69,7 +69,7 @@ use yii\helpers\Url;
 //                            'visible' => Yii::$app->user->isGuest
                     ],
                     [
-                            'label' => Yii::t('app','Instructor'),
+                            'label' => Yii::t('app','Teacher'),
                             'url' => Url::to(['/teacher/index']),
                             'icon' => 'fas fa-chalkboard-teacher',
 //                            'visible' => Yii::$app->user->isGuest
