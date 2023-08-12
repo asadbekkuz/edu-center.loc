@@ -21,7 +21,7 @@ class UserController extends \yii\web\Controller
     /**
      * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return \yii\web\Response
+     * @return \yii\web\Response | array
      */
     public function actionCreate()
     {
@@ -36,8 +36,9 @@ class UserController extends \yii\web\Controller
             }
             $response['content'] = $this->renderAjax('create', ['model' => $model]);
             return $response;
+        }else{
+           return $this->redirect('index');
         }
-        return $this->redirect('index');
     }
 
     /**

@@ -2,7 +2,6 @@
 
 use common\models\User;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\bootstrap4\ActiveForm;
 
 /** @var yii\web\View $this

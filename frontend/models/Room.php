@@ -31,6 +31,7 @@ class Room extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name','floor'],'required'],
             [['floor', 'capacity'], 'integer'],
             [['description'], 'string'],
             [['name'], 'string', 'max' => 255],
@@ -60,4 +61,11 @@ class Room extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Course::class, ['room_id' => 'id']);
     }
+
+//    public function afterFind()
+//    {
+//        $this->floor = $this->floor . '-' . Yii::t('app','floor');
+//        $this->capacity = $this->capacity . ' ' .Yii::t('app','persons');
+//        parent::afterFind();
+//    }
 }

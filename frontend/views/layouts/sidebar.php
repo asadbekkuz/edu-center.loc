@@ -57,7 +57,7 @@ use yii\helpers\Url;
 //                            'visible' => Yii::$app->user->isGuest
                     ],
                     [
-                            'label' => Yii::t('app','Science'),
+                            'label' => Yii::t('app','Subject'),
                             'url' => Url::to(['/science/index']),
                             'icon' => 'fas fa-directions',
 //                            'visible' => Yii::$app->user->isGuest

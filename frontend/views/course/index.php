@@ -20,7 +20,7 @@ $this->title = 'Course';
     <div class="card-body">
         <p>
             <?= Html::a('<i class="fas fa-plus-circle"></i>  ' . Yii::t('app', 'Create Course'),
-                Url::to(['/user/create']), [
+                Url::to(['/course/create']), [
                     'class' => 'btn btn-outline-success',
                     'id' => 'create-button'
                 ]) ?>

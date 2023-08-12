@@ -2,28 +2,70 @@
 
 namespace frontend\controllers;
 
-use Yii;
+use common\models\User;
 use frontend\models\Course;
 use frontend\models\search\CourseSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
 
+/**
+ * CourseController implements the CRUD actions for Course model.
+ */
 class CourseController extends Controller
 {
+    /**
+     * @inheritDoc
+     */
+    public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
+                    ],
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Lists all Course models.
+     *
+     * @return string
+     */
     public function actionIndex()
     {
         $searchModel = new CourseSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->get());
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel
         ]);
     }
 
     /**
-     * Creates a new User model.
+     * Displays a single Course model.
+     * @param int $id ID
+     * @return string
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    /**
+     * Creates a new Course model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return \yii\web\Response
+     * @return string|\yii\web\Response | array
      */
     public function actionCreate()
     {
@@ -38,33 +80,35 @@ class CourseController extends Controller
             }
             $response['content'] = $this->renderAjax('create', ['model' => $model]);
             return $response;
+        }else{
+            return $this->redirect('index');
         }
-        return $this->redirect('index');
     }
 
     /**
-     * Updates an existing User model.
+     * Updates an existing Course model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id
-     * @return array
+     * @param int $id ID
+     * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $model = $this->findModel($id);
-        $response['status'] = false;
+
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            $response['status'] = true;
+            return $this->redirect(['view', 'id' => $model->id]);
         }
-        $response['content'] =  $this->renderAjax('update', ['model' => $model]);
-        return $response;
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
-     * Deletes an existing Post model.
+     * Deletes an existing Course model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id
+     * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -76,9 +120,9 @@ class CourseController extends Controller
     }
 
     /**
-     * Finds the User model based on its primary key value.
+     * Finds the Course model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id
+     * @param int $id ID
      * @return Course the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -89,19 +133,5 @@ class CourseController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-    }
-
-    /**
-     * Displays a single User model.
-     * @param int $id
-     * @return array
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $response['status'] = false;
-        $response['content'] = $this->renderAjax('view', ['model' => $this->findModel($id)]);
-        return $response;
     }
 }

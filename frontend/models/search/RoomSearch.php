@@ -4,12 +4,12 @@ namespace frontend\models\search;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use frontend\models\Course;
+use frontend\models\Room;
 
 /**
- * CourseSearch represents the model behind the search form of `frontend\models\Course`.
+ * RoomSearch represents the model behind the search form of `frontend\models\Room`.
  */
-class CourseSearch extends Course
+class RoomSearch extends Room
 {
     /**
      * {@inheritdoc}
@@ -17,9 +17,8 @@ class CourseSearch extends Course
     public function rules()
     {
         return [
-            [['id', 'science_id', 'teacher_id', 'room_id', 'capacity', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
-            [['name'], 'safe'],
-            [['price'], 'number'],
+            [['id', 'floor', 'capacity'], 'integer'],
+            [['name', 'description'], 'safe'],
         ];
     }
 
@@ -41,7 +40,7 @@ class CourseSearch extends Course
      */
     public function search($params)
     {
-        $query = Course::find();
+        $query = Room::find();
 
         // add conditions that should always apply here
 
@@ -60,19 +59,12 @@ class CourseSearch extends Course
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'science_id' => $this->science_id,
-            'teacher_id' => $this->teacher_id,
-            'room_id' => $this->room_id,
-            'price' => $this->price,
+            'floor' => $this->floor,
             'capacity' => $this->capacity,
-            'status' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'created_by' => $this->created_by,
-            'updated_by' => $this->updated_by,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'description', $this->description]);
 
         return $dataProvider;
     }
