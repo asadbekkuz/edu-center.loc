@@ -2,58 +2,41 @@
 
 namespace frontend\controllers;
 
-use common\models\User;
 use Yii;
-use yii\data\Pagination;
-use yii\data\Sort;
+use common\models\User;
+use common\models\UserSearch;
 
 class UserController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        $newModel = new User();
-        $query = User::find();
-        $pagination = new Pagination([
-            'totalCount' => $query->count(),
-            'defaultPageSize' => 5
-        ]);
-        $sort = new Sort([
-            'attributes' => [
-                'username',
-                'first_name',
-                'last_name',
-                'phone',
-                'status'
-            ]
-        ]);
-
-        $model = $query->orderBy($sort->orders)->offset($pagination->offset)->limit($pagination->limit)->all();
-
+        $searchModel = new UserSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->get());
         return $this->render('index', [
-            'model' => $model,
-            'sort' => $sort,
-            'pagination' => $pagination,
-            'newModel' => $newModel
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel
         ]);
     }
 
     /**
      * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return \yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new User();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view','id'=>$model->id]);
-            }else{
-                Yii::$app->session->setFlash('danger',$model->getErrorSummary(false));
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $model = new User();
+            $response['status'] = false;
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->save()) {
+                    $response['status'] = true;
+                }
             }
+            $response['content'] = $this->renderAjax('create', ['model' => $model]);
+            return $response;
         }
-
         return $this->redirect('index');
     }
 
@@ -61,20 +44,19 @@ class UserController extends \yii\web\Controller
      * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id
-     * @return string|\yii\web\Response
+     * @return array
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $model = $this->findModel($id);
-
+        $response['status'] = false;
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $response['status'] = true;
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        $response['content'] =  $this->renderAjax('update', ['model' => $model]);
+        return $response;
     }
 
     /**
@@ -110,13 +92,14 @@ class UserController extends \yii\web\Controller
     /**
      * Displays a single User model.
      * @param int $id
-     * @return string
+     * @return array
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $response['status'] = false;
+        $response['content'] = $this->renderAjax('view', ['model' => $this->findModel($id)]);
+        return $response;
     }
 }

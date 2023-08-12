@@ -32,6 +32,10 @@ use yii\helpers\Url;
                             'label' => Yii::t('app','Employees'),
                             'url' => Url::to(['/user/index']),
                             'icon' => 'far fa-user',
+                            'items' => [
+                                ['label' => 'Active Page', 'url' => ['site/index'], 'iconStyle' => 'far'],
+                                ['label' => 'Inactive Page', 'iconStyle' => 'far'],
+                            ]
 //                            'visible' => Yii::$app->user->isGuest
                     ],
                     [

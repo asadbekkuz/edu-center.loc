@@ -2,12 +2,13 @@
 
 namespace frontend\models;
 
+use Yii;
 use common\components\db\CustomActiveRecord;
 use common\models\User;
-use Yii;
+use frontend\models\query\CourseQuery;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
+
 
 /**
  * This is the model class for table "course".
@@ -44,6 +45,15 @@ class Course extends CustomActiveRecord
     {
         return 'course';
     }
+
+    public static function filterDropDown()
+    {
+        return [
+            self::STATUS_INACTIVE => 'INACTIVE',
+            self::STATUS_ACTIVE => 'ACTIVE'
+        ];
+    }
+
     public function behaviors()
     {
         return [
@@ -173,4 +183,11 @@ class Course extends CustomActiveRecord
     {
         return $this->hasOne(User::class, ['id' => 'updated_by']);
     }
+
+    public static function find()
+    {
+        return new CourseQuery(get_called_class());
+    }
+
+
 }

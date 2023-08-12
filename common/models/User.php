@@ -2,10 +2,11 @@
 
 namespace common\models;
 
+use frontend\models\query\UserQuery;
 use Yii;
-use common\components\db\CustomActiveRecord;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
@@ -27,8 +28,12 @@ use yii\web\IdentityInterface;
  * @property int $updated_at
  * @property string|null $verification_token
  */
-class User extends CustomActiveRecord implements IdentityInterface
+class User extends ActiveRecord implements IdentityInterface
 {
+    const STATUS_DELETED = 0;
+    const STATUS_INACTIVE = 9;
+    const STATUS_ACTIVE = 10;
+
 
     /**
      * {@inheritdoc}
@@ -36,6 +41,14 @@ class User extends CustomActiveRecord implements IdentityInterface
     public static function tableName()
     {
         return '{{%user}}';
+    }
+
+    public static function filterDropDown()
+    {
+        return [
+            self::STATUS_INACTIVE => 'INACTIVE',
+            self::STATUS_ACTIVE => 'ACTIVE'
+        ];
     }
 
     /**
@@ -51,13 +64,10 @@ class User extends CustomActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
-            [['username','password', 'email'], 'required'],
+            [['first_name','last_name','username','phone', 'address','email','status','password'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['username', 'password_hash','password', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
             [['first_name', 'last_name', 'phone'], 'string', 'max' => 100],
@@ -245,5 +255,16 @@ class User extends CustomActiveRecord implements IdentityInterface
             $badge = '<span class="badge badge-success">ACTIVE</span>';
         }
         return $badge;
+    }
+
+    public static function find()
+    {
+        return new UserQuery(get_called_class());
+    }
+
+    public function beforeSave($insert)
+    {
+        $this->setPassword($this->password);
+        return parent::beforeSave($insert);
     }
 }

@@ -18,6 +18,7 @@ return [
             'csrfParam' => '_csrf-frontend',
             'baseUrl' => ''
         ],
+
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
@@ -45,6 +46,9 @@ return [
             'showScriptName' => false,
             'rules' => [
             ],
+        ],
+        'assetManager' => [
+            'appendTimestamp' =>true
         ],
         'i18n' => [
             'translations' => [

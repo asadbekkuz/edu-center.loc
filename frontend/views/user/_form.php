@@ -5,21 +5,18 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap4\ActiveForm;
 
-/** @var yii\web\View $this */
-/** @var User $model */
-/** @var yii\widgets\ActiveForm $form */
+/** @var yii\web\View $this
+ * @var User $model
+ * @var yii\widgets\ActiveForm $form
+ *
+ */
 
-$url = Url::to(['user/create']);
-if(!$model->isNewRecord)
-{
-    $url = Url::to(['user/update','id' => $model->id]);
-}
 ?>
 
 <div class="post-form">
 
     <?php $form = ActiveForm::begin([
-            'action' => $url
+            'id' => 'saveForm'
     ]); ?>
     <div class="row">
         <div class="col-lg-6">
@@ -53,10 +50,13 @@ if(!$model->isNewRecord)
             ]) ?>
         </div>
         <div class="col-lg-6">
-            <?= $form->field($model, 'password_hash')->passwordInput()->label(Yii::t('app','Password')) ?>
+            <?= $form->field($model, 'password')->passwordInput()->label(Yii::t('app','Password')) ?>
         </div>
     </div>
-    <?= Html::submitButton(Yii::t('app', Yii::t('app', 'Save')), ['class' => 'btn btn-success']) ?>
+    <?= Html::submitButton(Yii::t('app', Yii::t('app', 'Save')),[
+            'class' => 'btn btn-success',
+            'id' => 'saveButton'
+    ]) ?>
 
 
     <?php ActiveForm::end(); ?>

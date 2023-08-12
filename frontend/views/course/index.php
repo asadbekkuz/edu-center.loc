@@ -1,76 +1,75 @@
 <?php
 
-/** @var $model \frontend\models\Course */
-/** @var $newModel \frontend\models\Course */
-/** @var $dp \yii\data\ActiveDataProvider */
+/**
+ * @var $model \frontend\models\Course
+ * @var $dataProvider \yii\data\ActiveDataProvider
+ * @var $searchModel \frontend\models\search\CourseSearch
+ */
 
-
-use yii\bootstrap5\LinkPager;
+use frontend\models\Course;
+use yii\bootstrap4\LinkPager;
+use yii\bootstrap4\Modal;
+use yii\grid\GridView;
+use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\widgets\Pjax;
 
+$this->title = 'Course';
 ?>
 <div class="card">
     <div class="card-body">
-
         <p>
-            <button class="btn btn-outline-success" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                <i class="fas fa-plus"></i> <?= Yii::t('app','Create Course');?>
-            </button>
-        </p>
-
-        <div class="collapse" id="collapseExample">
-            <div class="card card-body">
-                <?= Yii::$app->session->has('danger') ? Yii::$app->session->get('danger') : ''; ?>
-                <?= $this->render('_form', [
-                    'model' => $newModel,
+            <?= Html::a('<i class="fas fa-plus-circle"></i>  ' . Yii::t('app', 'Create Course'),
+                Url::to(['/user/create']), [
+                    'class' => 'btn btn-outline-success',
+                    'id' => 'create-button'
                 ]) ?>
-            </div>
-        </div>
+        </p>
+        <?php Modal::begin([
+            'id' => 'modal',
+            'size' => Modal::SIZE_LARGE
+        ]);
 
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th><?= Yii::t('app',$dp->sort->link('name'));?></th>
-                <th><?= Yii::t('app',$dp->sort->link('science_id'));?></th>
-                <th><?= Yii::t('app',$dp->sort->link('teacher_id'));?></th>
-                <th><?= Yii::t('app',$dp->sort->link('price'));?></th>
-                <th><?= Yii::t('app',$dp->sort->link('status'));?></th>
-                <th><?= Yii::t('app',$dp->sort->link('created_by'));?></th>
-                <th><?= Yii::t('app',$dp->sort->link('updated_by'));?></th>
-                <th><a href="javascript:void(0)">Actions</a></th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($dp->getModels() as $value): ?>
-                <tr>
-                    <td><?= $value->name ?></td>
-                    <td><?= $value->science_id ?></td>
-                    <td><?= $value->teacher_id ?></td>
-                    <td><?= $value->price ?></td>
-                    <td><?= $value->status ?></td>
-                    <td><?= $value->created_by ?></td>
-                    <td><?= $value->updated_by ?></td>
+        echo "<div id='modal-content'></div>";
 
-                    <td style="display: flex;">
-                        <a href="<?= Url::to(['course/update','id'=>$value->id])?>" class="btn btn-outline-info"><i class="fas fa-pen"></i></a>
-                        <a href="<?= Url::to(['course/delete','id'=>$value->id])?>" class="btn btn-outline-danger mx-2"><i class="fas fa-trash"></i></a>
-                        <a href="<?= Url::to(['course/view','id'=>$value->id])?>" class="btn btn-outline-success"><i class="fas fa-eye"></i></a>
-                    </td>
+        Modal::end(); ?>
 
-                </tr>
-            <?php endforeach;?>
-            </tbody>
-        </table>
+        <?php Pjax::begin(['id' => 'pjaxGrid']); ?>
+
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'pager' => [
+                   'class' => LinkPager::class,
+                   'prevPageLabel' => Yii::t('app','Prev'),
+                   'nextPageLabel' => Yii::t('app','Next')
+            ],
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+                'name',
+                'science_id',
+                'teacher_id',
+                'room_id',
+                'price',
+                'capacity',
+                [
+                    'attribute' => 'status',
+                    'value' => fn($model) => $model->showStatus($model->status),
+                    'filter' => Html::activeDropDownList($searchModel,
+                            'status',
+                                     Course::filterDropDown(),
+                                    [
+                                        'class'=>'form-control',
+                                        'prompt' => 'select']),
+                    'format' => 'html',
+                ],
+                [
+                    'class' => 'common\components\CustomActionColumn',
+                ]
+            ],
+        ]); ?>
+
+        <?php Pjax::end(); ?>
     </div>
 </div>
-
-<?php
-
-echo LinkPager::widget([
-    'pagination' =>$dp->pagination,
-    'options' => [
-        'class' => 'mt-2'
-    ]
-])
-?>
 

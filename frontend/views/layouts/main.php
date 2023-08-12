@@ -49,6 +49,7 @@ $this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\ha
 </div>
 
 <?php $this->endBody() ?>
+<?php $this->registerJsFile('/js/app.js'); ?>
 </body>
 </html>
 <?php $this->endPage() ?>

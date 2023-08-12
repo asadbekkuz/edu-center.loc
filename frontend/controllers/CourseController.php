@@ -2,103 +2,63 @@
 
 namespace frontend\controllers;
 
-use frontend\models\Course;
 use Yii;
-use yii\data\ActiveDataProvider;
-use yii\data\Pagination;
-use yii\data\Sort;
+use frontend\models\Course;
+use frontend\models\search\CourseSearch;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
-class CourseController extends \yii\web\Controller
+class CourseController extends Controller
 {
     public function actionIndex()
     {
-        $newModel = new Course();
-        $query = Course::find();
-        $dp = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'totalCount' => $query->count(),
-                'defaultPageSize' => 5
-            ],
-            'sort' => [
-                'attributes' => [
-                'name',
-                'science_id',
-                'teacher_id',
-                'price',
-                'capacity',
-                'status',
-                'created_by',
-                'updated_by'
-            ]
-            ]
-        ]);
-//        $pagination = new Pagination([
-//            'totalCount' => $query->count(),
-//            'defaultPageSize' => 5
-//        ]);
-//        $sort = new Sort([
-//            'attributes' => [
-//                'name',
-//                'science_id',
-//                'teacher_id',
-//                'price',
-//                'capacity',
-//                'status',
-//                'created_by',
-//                'updated_by'
-//            ]
-//        ]);
-//
-//        $model = $query->orderBy($sort->orders)->offset($pagination->offset)->limit($pagination->limit)->all();
-
+        $searchModel = new CourseSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->get());
         return $this->render('index', [
-//            'model' => $model,
-//            'sort' => $sort,
-//            'pagination' => $pagination,
-            'newModel' => $newModel,
-            'dp' => $dp
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel
         ]);
     }
 
     /**
-     * Creates a new Course model.
+     * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return \yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Course();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view','id'=>$model->id]);
-            }else{
-                Yii::$app->session->setFlash('danger',$model->getErrorSummary(false));
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $model = new Course();
+            $response['status'] = false;
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->save()) {
+                    $response['status'] = true;
+                }
             }
+            $response['content'] = $this->renderAjax('create', ['model' => $model]);
+            return $response;
         }
-
         return $this->redirect('index');
     }
 
     /**
-     * Updates an existing Course model.
+     * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id
-     * @return string|\yii\web\Response
+     * @return array
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $model = $this->findModel($id);
-
+        $response['status'] = false;
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $response['status'] = true;
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        $response['content'] =  $this->renderAjax('update', ['model' => $model]);
+        return $response;
     }
 
     /**
@@ -116,7 +76,7 @@ class CourseController extends \yii\web\Controller
     }
 
     /**
-     * Finds the Course model based on its primary key value.
+     * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id
      * @return Course the loaded model
@@ -132,16 +92,16 @@ class CourseController extends \yii\web\Controller
     }
 
     /**
-     * Displays a single Course model.
+     * Displays a single User model.
      * @param int $id
-     * @return string
+     * @return array
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $response['status'] = false;
+        $response['content'] = $this->renderAjax('view', ['model' => $this->findModel($id)]);
+        return $response;
     }
-
 }

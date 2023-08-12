@@ -14,16 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="post-view">
     <div class="card">
         <div class="card-body">
-            <p>
-                <?= Html::a("<i class='fas fa-pen'> </i>  ".Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-outline-primary']) ?>
-                <?= Html::a("<i class='fas fa-trash'> </i> ".Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-                    'class' => 'btn btn-outline-danger',
-                    'data' => [
-                        'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                        'method' => 'post',
-                    ],
-                ]) ?>
-            </p>
 
             <?= DetailView::widget([
                 'model' => $model,
@@ -39,8 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'value' => fn($model) => $model->showStatus($model->status),
                         'format'=>'html'
                     ],
-                    'created_at',
-                    'updated_at',
+                    'created_at:datetime',
+                    'updated_at:datetime',
                 ],
             ]) ?>
         </div>

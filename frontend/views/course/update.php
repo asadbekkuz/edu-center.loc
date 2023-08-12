@@ -3,10 +3,10 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var \frontend\models\Course $model */
+/** @var common\models\User $model */
 
 $this->title = Yii::t('app', 'Update User: {name}', [
-    'name' => $model->name,
+    'name' => $model->username,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'User'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->username, 'url' => ['view', 'id' => $model->id]];
