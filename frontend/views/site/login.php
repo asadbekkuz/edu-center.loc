@@ -5,37 +5,85 @@
 /** @var \common\models\LoginForm $model */
 
 use yii\bootstrap5\Html;
-use yii\bootstrap5\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
+$label = 'Username';
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>Please fill out the following fields to login:</p>
-
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-
-                <?= $form->field($model, 'password')->passwordInput() ?>
-
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
-
-                <div class="my-1 mx-0" style="color:#999;">
-                    If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                    <br>
-                    Need new verification email? <?= Html::a('Resend', ['site/resend-verification-email']) ?>
-                </div>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
-
-            <?php ActiveForm::end(); ?>
+<div class="row align-items-center">
+    <div class="col-3 mx-auto">
+        <div class="text-center">
+            <img id="profile-img" class="rounded-circle profile-img-card" src="https://i.imgur.com/6b6psnA.png" />
         </div>
     </div>
 </div>
+
+<section>
+
+<div class="signin">
+
+    <div class="content">
+        <h2>Log In</h2>
+            <?php $form = ActiveForm::begin(['id' => 'login-form','options' => ['class' => 'form'],
+                'fieldConfig'=>[
+                    'template' => "{input}\n{error}",
+//                   'inputTemplate' => "{input}",
+                ]
+            ])?>
+            <div class="inputBox">
+                <?= $form->field($model,'username')->textInput([
+                        'placeholder' => 'Username',
+                        'class' =>false
+                ])->label(false); ?>
+            </div>
+            <div class="inputBox">
+                <?= $form->field($model,'password')->textInput([
+                        'placeholder' =>'Password',
+                         'class' =>false
+                ])->label(false) ?>
+            </div>
+            <div class="inputBox">
+                <?= Html::submitButton('Login',
+                    [
+                        'class' => 'btn btn-success mb-4',
+                        'name' => 'login-button',
+                        'style' => [
+                                'width'=>'100%'
+                        ]
+                    ]) ?>
+<!--                <input type="submit" value="Login">-->
+            </div>
+            <?php ActiveForm::end() ?>
+    </div>
+</div>
+</section>
+<!--<div class="container h-80">-->
+<!--    <div class="row align-items-center h-100">-->
+<!--        <div class="col-3 mx-auto">-->
+<!--            <div class="text-center">-->
+<!--                <img id="profile-img" class="rounded-circle profile-img-card" src="https://i.imgur.com/6b6psnA.png" />-->
+<!--                <p id="profile-name" class="profile-name-card"></p>-->
+<!--                --><?php //$form = ActiveForm::begin(['id' => 'login-form']); ?>
+<!---->
+<!--                    --><?php //= $form->field($model, 'username')->textInput([
+//                            'autofocus' => true,
+//                            'placeholder' => 'username'
+//                        ])->label(false) ?>
+<!--                    --><?php //= $form->field($model, 'password')->passwordInput([
+//                            'placeholder' => 'password'
+//                    ])->label(false) ?>
+<!--                    <div class="form-group">-->
+<!--                        --><?php //= Html::submitButton('Login', [
+//                            'class' => 'btn btn-primary',
+//                            'name' => 'login-button',
+//                            'style' => [
+//                                'display' => 'inline-block'
+//                            ]
+//                        ]) ?>
+<!--                    </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
