@@ -5,7 +5,7 @@ use yii\helpers\Url;
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="<?= Url::to(['/site/index'])?>" class="brand-link">
         <img src="<?=$assetDir?>/img/AdminLTELogo.png" alt="Admin" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">OPUS</span>
     </a>
@@ -18,7 +18,7 @@ use yii\helpers\Url;
                 <img src="<?=$assetDir?>/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block"><?= Yii::t('app','admin') ?></a>
+                <a href="<?= Url::to(['/user/setting'])?>" class="d-block"><?= Yii::$app->user->identity->username ?></a>
             </div>
         </div>
 
@@ -27,15 +27,10 @@ use yii\helpers\Url;
             <?php
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
-//                    ['label' => 'Yii2 PROVIDED', 'header' => true],
                     [
                             'label' => Yii::t('app','Employees'),
                             'url' => Url::to(['/user/index']),
                             'icon' => 'far fa-user',
-                            'items' => [
-                                ['label' => 'Active Page', 'url' => ['site/index'], 'iconStyle' => 'far'],
-                                ['label' => 'Inactive Page', 'iconStyle' => 'far'],
-                            ]
 //                            'visible' => Yii::$app->user->isGuest
                     ],
                     [

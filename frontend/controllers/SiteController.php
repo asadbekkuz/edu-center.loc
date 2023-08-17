@@ -29,14 +29,15 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout', 'signup', 'login'],
+                'only' => ['logout', 'signup', 'login','index','create','update','view'],
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['login', 'error','signup'],
                         'allow' => true,
+                        'roles' => ['?']
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['index','create','update','view'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -112,7 +113,24 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
+    /**
+     * Signs user up.
+     *
+     * @return mixed
+     */
+    public function actionSignup()
+    {
+        $model = new SignupForm();
+        $model->load(Yii::$app->request->post());
+        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+            return $this->goHome();
+        }
 
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
     /**
      * Requests password reset.
      *

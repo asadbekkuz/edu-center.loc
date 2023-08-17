@@ -67,7 +67,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['first_name','last_name','username','phone', 'address','email','status','password'], 'required'],
+            [['username','email','password'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['username', 'password_hash','password', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
             [['first_name', 'last_name', 'phone'], 'string', 'max' => 100],
@@ -267,4 +267,5 @@ class User extends ActiveRecord implements IdentityInterface
         $this->setPassword($this->password);
         return parent::beforeSave($insert);
     }
+
 }

@@ -11,7 +11,7 @@ $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 $label = 'Username';
 ?>
-<div class="row align-items-center">
+<div class="align-items-center">
     <div class="col-3 mx-auto">
         <div class="text-center">
             <img id="profile-img" class="rounded-circle profile-img-card" src="https://i.imgur.com/6b6psnA.png" />
@@ -38,9 +38,9 @@ $label = 'Username';
                 ])->label(false); ?>
             </div>
             <div class="inputBox">
-                <?= $form->field($model,'password')->textInput([
+                <?= $form->field($model,'password')->passwordInput([
                         'placeholder' =>'Password',
-                         'class' =>false
+                        'class' =>false
                 ])->label(false) ?>
             </div>
             <div class="inputBox">
