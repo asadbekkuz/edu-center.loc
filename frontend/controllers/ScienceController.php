@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use frontend\models\Science;
 use frontend\models\search\ScienceSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -14,6 +15,44 @@ use yii\web\Response;
  */
 class ScienceController extends Controller
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['indexScience'],
+                    ],
+                    [
+                        'actions' => ['view'],
+                        'allow' => true,
+                        'roles' => ['viewScience'],
+                    ],
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['deleteScience']
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['updateScience']
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['createScience']
+                    ],
+                ],
+            ]
+        ];
+    }
     /**
      * Lists all Science models.
      *

@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use frontend\models\Teacher;
 use frontend\models\TeacherSearch;
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -14,7 +15,44 @@ use yii\filters\VerbFilter;
  */
 class TeacherController extends Controller
 {
-
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['indexTeacher'],
+                    ],
+                    [
+                        'actions' => ['view'],
+                        'allow' => true,
+                        'roles' => ['viewTeacher'],
+                    ],
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['deleteTeacher']
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['updateTeacher']
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['createTeacher']
+                    ],
+                ],
+            ]
+        ];
+    }
     /**
      * Lists all Teacher models.
      *

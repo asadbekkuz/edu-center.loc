@@ -6,9 +6,49 @@ use frontend\models\Group;
 use Yii;
 use yii\data\Pagination;
 use yii\data\Sort;
+use yii\filters\AccessControl;
 
 class GroupController extends \yii\web\Controller
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['indexGroup'],
+                    ],
+                    [
+                        'actions' => ['view'],
+                        'allow' => true,
+                        'roles' => ['viewGroup'],
+                    ],
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['deleteGroup']
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['updateGroup']
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['createGroup']
+                    ],
+                ],
+            ]
+        ];
+    }
+
     public function actionIndex()
     {
         $newModel = new Group();

@@ -5,9 +5,48 @@ namespace frontend\controllers;
 use Yii;
 use common\models\User;
 use common\models\UserSearch;
+use yii\filters\AccessControl;
 
 class UserController extends \yii\web\Controller
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['indexUser'],
+                    ],
+                    [
+                        'actions' => ['view'],
+                        'allow' => true,
+                        'roles' => ['viewUser'],
+                    ],
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['deleteUser']
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['updateUser']
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['createUser']
+                    ],
+                ],
+            ]
+        ];
+    }
     public function actionIndex()
     {
         $searchModel = new UserSearch();

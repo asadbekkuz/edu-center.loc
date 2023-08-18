@@ -2,13 +2,12 @@
 
 namespace frontend\controllers;
 
-use common\models\User;
+use Yii;
 use frontend\models\Course;
 use frontend\models\search\CourseSearch;
-use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * CourseController implements the CRUD actions for Course model.
@@ -16,21 +15,42 @@ use yii\filters\VerbFilter;
 class CourseController extends Controller
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['indexCourse'],
+                    ],
+                    [
+                        'actions' => ['view'],
+                        'allow' => true,
+                        'roles' => ['viewCourse'],
+                    ],
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['deleteCourse']
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['updateCourse']
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['createCourse']
                     ],
                 ],
             ]
-        );
+        ];
     }
 
     /**

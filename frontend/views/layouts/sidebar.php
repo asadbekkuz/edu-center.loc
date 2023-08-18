@@ -18,7 +18,7 @@ use yii\helpers\Url;
                 <img src="<?=$assetDir?>/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="<?= Url::to(['/user/setting'])?>" class="d-block"><?= Yii::$app->user->identity->username ?></a>
+                <a href="<?= Url::to(['/user/setting'])?>" class="d-block"><?= Yii::$app->user->identity->username ?? 'Unkown' ?></a>
             </div>
         </div>
 
@@ -28,46 +28,46 @@ use yii\helpers\Url;
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
                     [
-                            'label' => Yii::t('app','Employees'),
+                            'label' => Yii::t('app','Xodimlar'),
                             'url' => Url::to(['/user/index']),
                             'icon' => 'far fa-user',
-//                            'visible' => Yii::$app->user->isGuest
+                            'visible' => Yii::$app->user->can('admin')
                     ],
                     [
                             'label' => Yii::t('app','Courses'),
                             'url' => Url::to(['/course/index']),
                             'icon' => 'far fa-bookmark',
-//                            'visible' => Yii::$app->user->isGuest
+                            'visible' => Yii::$app->user->can('admin')
                     ],
                     [
                             'label' => Yii::t('app','Groups'),
                             'url' => Url::to(['/group/index']),
                             'icon' => 'fas fa-users',
-//                            'visible' => Yii::$app->user->isGuest
+                            'visible' => Yii::$app->user->can('admin')
                     ],
                     [
                             'label' => Yii::t('app','Room'),
                             'url' => Url::to(['/room/index']),
                             'icon' => 'fas fa-warehouse',
-//                            'visible' => Yii::$app->user->isGuest
+                            'visible' => Yii::$app->user->can('admin')
                     ],
                     [
                             'label' => Yii::t('app','Subject'),
                             'url' => Url::to(['/science/index']),
                             'icon' => 'fas fa-directions',
-//                            'visible' => Yii::$app->user->isGuest
+                            'visible' => Yii::$app->user->can('admin')
                     ],
                     [
                             'label' => Yii::t('app','Student'),
                             'url' => Url::to(['/student/index']),
                             'icon' => 'fas fa-user-graduate',
-//                            'visible' => Yii::$app->user->isGuest
+                            'visible' => Yii::$app->user->can('admin') ||  Yii::$app->user->can('teacher')
                     ],
                     [
                             'label' => Yii::t('app','Teacher'),
                             'url' => Url::to(['/teacher/index']),
                             'icon' => 'fas fa-chalkboard-teacher',
-//                            'visible' => Yii::$app->user->isGuest
+                            'visible' => Yii::$app->user->can('admin')
                     ],
                     [
                             'label' => 'Gii',
