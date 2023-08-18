@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'email',
                     [
                         'attribute' => 'status',
-                        'value' => fn($model) => $model->showStatus($model->status),
+                        'value' => fn($model) => $model->getStatus($model->status),
                         'format'=>'html'
                     ],
                     'created_at:datetime',

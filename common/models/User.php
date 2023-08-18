@@ -2,8 +2,8 @@
 
 namespace common\models;
 
-use frontend\models\query\UserQuery;
 use Yii;
+use frontend\models\query\UserQuery;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -23,6 +23,7 @@ use yii\web\IdentityInterface;
  * @property string $password_hash
  * @property string|null $password_reset_token
  * @property string $email
+ * @property string $type
  * @property int $status
  * @property int $created_at
  * @property int $updated_at
@@ -33,7 +34,10 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
-
+    const STATUS_TEACHER = 'TEACHER';
+    const STATUS_ASSISTENT = 'TEACHER_ASSISTENT';
+    const STATUS_ADMIN = 'ADMIN';
+    const STATUS_SUPER_ADMIN = 'SUPER_ADMIN';
 
     /**
      * {@inheritdoc}
@@ -41,14 +45,6 @@ class User extends ActiveRecord implements IdentityInterface
     public static function tableName()
     {
         return '{{%user}}';
-    }
-
-    public static function filterDropDown()
-    {
-        return [
-            self::STATUS_INACTIVE => 'INACTIVE',
-            self::STATUS_ACTIVE => 'ACTIVE'
-        ];
     }
 
     /**
@@ -70,7 +66,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['username','email','password'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['username', 'password_hash','password', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
-            [['first_name', 'last_name', 'phone'], 'string', 'max' => 100],
+            [['first_name', 'last_name', 'phone','type'], 'string', 'max' => 100],
             [['address'], 'string', 'max' => 250],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
@@ -232,6 +228,20 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = null;
     }
 
+    public static function find()
+    {
+        return new UserQuery(get_called_class());
+    }
+
+    public function beforeSave($insert)
+    {
+        $this->setPassword($this->password);
+        return parent::beforeSave($insert);
+    }
+    /**
+     *  Get status label
+     * @return array
+     */
     public static function getStatusLabels(): array
     {
         return [
@@ -241,7 +251,12 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public function showStatus($status)
+    /**
+     * Get status with badges
+     * @param $status
+     * @return string
+     */
+    public function getStatus($status): string
     {
         $badge = '<span class="badge badge-dark">UNKOWN</span>';
         if($status == '0')
@@ -257,15 +272,43 @@ class User extends ActiveRecord implements IdentityInterface
         return $badge;
     }
 
-    public static function find()
+    public function getPosition($position)
     {
-        return new UserQuery(get_called_class());
+        switch ($position){
+            case self::STATUS_ADMIN:
+                $data = "<span class='badge badge-pill badge-primary'>".self::STATUS_ADMIN."</span>";
+                break;
+            case self::STATUS_ASSISTENT:
+                $data = '<span class="badge badge-pill badge-success">'.self::STATUS_ASSISTENT.'</span>';
+                break;
+            case self::STATUS_TEACHER:
+                $data = '<span class="badge badge-pill badge-warning">'.self::STATUS_TEACHER.'</span>';
+                break;
+            case self::STATUS_SUPER_ADMIN:
+                $data = '<span class="badge badge-pill badge-info">'.self::STATUS_SUPER_ADMIN.'</span>';
+                break;
+            default: $data = '<span class="badge badge-pill badge-danger">UNKOWN</span>';
+        }
+        return $data;
     }
 
-    public function beforeSave($insert)
+    public static function getPositionLabel()
     {
-        $this->setPassword($this->password);
-        return parent::beforeSave($insert);
+        return [
+            self::STATUS_ASSISTENT => self::STATUS_ASSISTENT,
+            self::STATUS_TEACHER => self::STATUS_TEACHER,
+            self::STATUS_ADMIN => self::STATUS_ADMIN,
+            self::STATUS_SUPER_ADMIN => self::STATUS_SUPER_ADMIN
+        ];
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+        if($this->isNewRecord){
+            $auth = \Yii::$app->authManager;
+            $authorRole = $auth->getRole('admin');
+            $auth->assign($authorRole, $this->getId());
+        }
+        parent::afterSave($insert, $changedAttributes);
+    }
 }

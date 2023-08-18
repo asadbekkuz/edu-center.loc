@@ -52,10 +52,23 @@ use yii\bootstrap4\ActiveForm;
             <?= $form->field($model, 'password')->passwordInput()->label(Yii::t('app','Password')) ?>
         </div>
     </div>
-    <?= Html::submitButton(Yii::t('app', Yii::t('app', 'Save')),[
-            'class' => 'btn btn-success',
-            'id' => 'saveButton'
-    ]) ?>
+    <div class="row">
+        <div class="col-lg-6">
+            <?= $form->field($model, 'type')->dropDownList(User::getPositionLabel(),[
+                'prompt' => 'Lavozimni tanlang...'
+            ]) ?>
+        </div>
+        <div class="col-lg-6">
+            <?= Html::submitButton('<i class="far fa-save"></i>&nbsp&nbsp'.Yii::t('app', 'Save'), [
+                'class' => 'btn btn-warning',
+                'id' => 'saveButton',
+                'style' => [
+                        'margin-top' => '30px'
+                ]
+            ]) ?>
+        </div>
+    </div>
+
 
 
     <?php ActiveForm::end(); ?>

@@ -14,13 +14,13 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 
-$this->title = 'User';
+$this->title = Yii::t('app','Xodim');;
 ?>
 <div class="card">
     <div class="card-body">
         <p>
-            <?= Html::a('<i class="fas fa-plus-circle"></i>  ' . Yii::t('app', 'Create User'),
-                Url::to(['/room/create']), [
+            <?= Html::a('<i class="fas fa-plus-circle"></i>  ' . Yii::t('app', 'Xodim yaratish'),
+                Url::to(['/user/create']), [
                     'class' => 'btn btn-outline-success',
                     'id' => 'create-button'
                 ]) ?>
@@ -50,11 +50,23 @@ $this->title = 'User';
                 'first_name',
                 'last_name',
                 [
+                    'attribute' => 'type',
+                    'label' => Yii::t('app','Lavozim'),
+                    'value' => fn($model) => $model->getPosition($model->type),
+                    'filter' => Html::activeDropDownList($searchModel,
+                        'type',
+                        User::getPositionLabel(),
+                        [
+                            'class'=>'form-control',
+                            'prompt' => 'select']),
+                    'format' => 'html',
+                ],
+                [
                     'attribute' => 'status',
-                    'value' => fn($model) => $model->showStatus($model->status),
+                    'value' => fn($model) => $model->getStatus($model->status),
                     'filter' => Html::activeDropDownList($searchModel,
                             'status',
-                                     User::filterDropDown(),
+                                     User::getStatusLabels(),
                                     [
                                         'class'=>'form-control',
                                         'prompt' => 'select']),

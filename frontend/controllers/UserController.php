@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use frontend\models\message\UserForm;
 use Yii;
 use common\models\User;
 use common\models\UserSearch;
@@ -42,6 +43,11 @@ class UserController extends \yii\web\Controller
                         'actions' => ['create'],
                         'allow' => true,
                         'roles' => ['createUser']
+                    ],
+                    [
+                        'actions' => ['message'],
+                        'allow' => true,
+                        'roles' => ['admin']
                     ],
                 ],
             ]
@@ -141,5 +147,11 @@ class UserController extends \yii\web\Controller
         $response['status'] = false;
         $response['content'] = $this->renderAjax('view', ['model' => $this->findModel($id)]);
         return $response;
+    }
+
+    public function actionMessage()
+    {
+        $user = new UserForm();
+        return $this->render('message',compact('user'));
     }
 }

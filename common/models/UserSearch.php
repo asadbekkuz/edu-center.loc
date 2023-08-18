@@ -9,7 +9,7 @@ class UserSearch extends User
     public function rules()
     {
         return [
-            [['username','first_name','last_name','phone','email','status'],'safe']
+            [['username','first_name','last_name','phone','email','status','type'],'safe']
         ];
     }
 
@@ -21,7 +21,6 @@ class UserSearch extends User
             'query' => $query,
             'pagination' => [
                 'pageSize' => 10,
-
             ]
         ]);
 
@@ -35,6 +34,7 @@ class UserSearch extends User
             ->andFilterWhere(['like','first_name',$this->first_name])
             ->andFilterWhere(['like','last_name',$this->last_name])
             ->andFilterWhere(['like','phone',$this->phone])
+            ->andFilterWhere(['type' => $this->type])
             ->andFilterWhere(['status' => $this->status]);
 
         return $dataProvider;
