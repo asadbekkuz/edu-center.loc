@@ -2,6 +2,8 @@
 
 namespace frontend\models;
 
+use common\models\User;
+use frontend\models\query\StudentQuery;
 use Yii;
 
 /**
@@ -25,6 +27,11 @@ use Yii;
  */
 class Student extends \yii\db\ActiveRecord
 {
+
+    const STUDENT_LID = 0;
+    const STUDENT_ACTIVE = 1;
+
+
     /**
      * {@inheritdoc}
      */
@@ -97,5 +104,13 @@ class Student extends \yii\db\ActiveRecord
     public function getUpdatedBy()
     {
         return $this->hasOne(User::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * @return StudentQuery
+     */
+    public static function find()
+    {
+        return (new StudentQuery(get_called_class()));
     }
 }

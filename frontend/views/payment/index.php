@@ -1,8 +1,6 @@
 <?php
 
-use common\components\CustomActionColumn;
-use common\models\User;
-use frontend\models\Teacher;
+use frontend\models\Payment;
 use yii\bootstrap4\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -11,20 +9,18 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 
 /** @var yii\web\View $this */
-/** @var frontend\models\TeacherSearch $searchModel */
+/** @var frontend\models\PaymentSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = Yii::t('app', 'Teachers');
+$this->title = Yii::t('app', 'Payments');
 $this->params['breadcrumbs'][] = $this->title;
-
 ?>
-<div class="teacher-index">
-
+<div class="payment-index">
     <div class="card">
         <div class="card-body">
             <p>
-                <?= Html::a('<i class="fas fa-plus-circle"></i>  ' . Yii::t('app', 'Create Teacher'),
-                    Url::to(['/teacher/create']),
+                <?= Html::a('<i class="fas fa-plus-circle"></i>  ' . Yii::t('app', 'Add Payment'),
+                    Url::to(['/payment/create']),
                     [
                         'class' => 'btn btn-outline-success',
                         'id' => 'create-button'
@@ -47,18 +43,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     ['class' => 'yii\grid\SerialColumn'],
 
                     'id',
-                    'user_id',
-                    'science_id',
-                    'salary',
+                    'student_id',
+                    'course_id',
+                    'price',
                     'status',
+                    //'created_at',
+                    //'updated_at',
                     [
-                        'class' => CustomActionColumn::class,
+                        'class' => ActionColumn::className(),
+                        'urlCreator' => function ($action, Payment $model, $key, $index, $column) {
+                            return Url::toRoute([$action, 'id' => $model->id]);
+                        }
                     ],
                 ],
             ]); ?>
 
-
             <?php Pjax::end(); ?>
         </div>
-    </div
+    </div>
 </div>

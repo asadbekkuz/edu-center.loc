@@ -5,7 +5,7 @@
 /** @var $pagination \yii\data\Pagination */
 /** @var $sort  \yii\data\Sort */
 
-use yii\bootstrap5\LinkPager;
+use yii\bootstrap4\LinkPager;
 use yii\helpers\Url;
 
 ?>

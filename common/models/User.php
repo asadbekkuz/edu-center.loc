@@ -14,6 +14,7 @@ use yii\web\IdentityInterface;
  *
  * @property int $id
  * @property string $username
+ * @property string $image
  * @property string $first_name
  * @property string $last_name
  * @property string|null $phone
@@ -31,6 +32,9 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    public $imageFile;
+    public $new_password;
+    public $old_password;
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
@@ -65,8 +69,10 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             [['username','email','password'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'password_hash','password', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
-            [['first_name', 'last_name', 'phone','type'], 'string', 'max' => 100],
+            [['username', 'password_hash','password','old_password','new_password', 'password_reset_token', 'email', 'verification_token','new_password','old_password'], 'string', 'max' => 255],
+            ['old_password', 'compare', 'compareAttribute'=>'password', 'message'=>"Passwords don't match" ],
+            [['first_name', 'last_name', 'phone','type','image'], 'string', 'max' => 100],
+            ['imageFile','file','extensions'=>'png,jpg','maxSize' => 1024 * 10 * 8],
             [['address'], 'string', 'max' => 250],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],

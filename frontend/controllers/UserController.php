@@ -7,6 +7,7 @@ use Yii;
 use common\models\User;
 use common\models\UserSearch;
 use yii\filters\AccessControl;
+use yii\web\UploadedFile;
 
 class UserController extends \yii\web\Controller
 {
@@ -45,7 +46,22 @@ class UserController extends \yii\web\Controller
                         'roles' => ['createUser']
                     ],
                     [
+                        'actions' => ['profile'],
+                        'allow' => true,
+                        'roles' => ['createUser']
+                    ],
+                    [
                         'actions' => ['message'],
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ],
+                    [
+                        'actions' => ['information'],
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ],
+                    [
+                        'actions' => ['image'],
                         'allow' => true,
                         'roles' => ['admin']
                     ],
@@ -53,6 +69,7 @@ class UserController extends \yii\web\Controller
             ]
         ];
     }
+
     public function actionIndex()
     {
         $searchModel = new UserSearch();
@@ -81,8 +98,8 @@ class UserController extends \yii\web\Controller
             }
             $response['content'] = $this->renderAjax('create', ['model' => $model]);
             return $response;
-        }else{
-           return $this->redirect('index');
+        } else {
+            return $this->redirect('index');
         }
     }
 
@@ -101,7 +118,7 @@ class UserController extends \yii\web\Controller
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             $response['status'] = true;
         }
-        $response['content'] =  $this->renderAjax('update', ['model' => $model]);
+        $response['content'] = $this->renderAjax('update', ['model' => $model]);
         return $response;
     }
 
@@ -152,6 +169,38 @@ class UserController extends \yii\web\Controller
     public function actionMessage()
     {
         $user = new UserForm();
-        return $this->render('message',compact('user'));
+        return $this->render('message', compact('user'));
+    }
+
+    public function actionProfile()
+    {
+        $user = User::findOne(['id' => Yii::$app->user->identity->id]);
+        return $this->render('profile', [
+            'user' => $user
+        ]);
+    }
+
+    /** User Information */
+    public function actionInformation()
+    {
+        $data = Yii::$app->request->post();
+        $model = $this->findModel($data['User']['id']);
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('information', 'User\'s Information successfully updated');
+        } else {
+            Yii::$app->session->setFlash('information', 'User\'s Information was not saved');
+        }
+        return $this->redirect('profile');
+    }
+
+    /** Upload image */
+    public function actionImage()
+    {
+        if (Yii::$app->request->isPost) {
+            echo "<pre>";
+            print_r(Yii::$app->request->post());
+            echo "</pre>";
+            exit();
+        }
     }
 }

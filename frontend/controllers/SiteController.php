@@ -2,9 +2,11 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Group;
+use frontend\models\Payment;
+use frontend\models\Student;
 use Yii;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
 
@@ -56,7 +58,17 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $lidStudent = Student::find()->lid()->count();
+        $activeStudent = Student::find()->active()->count();
+        $groups = Group::find()->active()->count();
+        $paymentDebtors = Payment::find()->debtor()->count();
+
+        return $this->render('index',[
+            'lidStudent' => $lidStudent,
+            'activeStudent' => $activeStudent,
+            'groups' =>$groups,
+            'paymentDebtor' => $paymentDebtors
+        ]);
     }
 
     /**

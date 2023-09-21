@@ -3,17 +3,17 @@
 namespace frontend\controllers;
 
 use Yii;
-use frontend\models\Science;
-use frontend\models\search\ScienceSearch;
+use frontend\models\Payment;
+use frontend\models\PaymentSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
- * ScienceController implements the CRUD actions for Science model.
+ * PaymentController implements the CRUD actions for Payment model.
  */
-class ScienceController extends Controller
+class PaymentController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -53,14 +53,15 @@ class ScienceController extends Controller
             ]
         ];
     }
+
     /**
-     * Lists all Science models.
+     * Lists all Payment models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new ScienceSearch();
+        $searchModel = new PaymentSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -70,7 +71,7 @@ class ScienceController extends Controller
     }
 
     /**
-     * Displays a single Science model.
+     * Displays a single Payment model.
      * @param int $id ID
      * @return array
      * @throws NotFoundHttpException if the model cannot be found
@@ -84,7 +85,7 @@ class ScienceController extends Controller
     }
 
     /**
-     * Creates a new Science model.
+     * Creates a new Payment model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|Response | array
      */
@@ -93,11 +94,11 @@ class ScienceController extends Controller
 
         if (Yii::$app->request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
-            $model = new Science();
+            $model = new Payment();
             $response['status'] = false;
             if ($this->request->isPost) {
                 if ($model->load($this->request->post()) && $model->save(false)) {
-                        $response['status'] = true;
+                    $response['status'] = true;
                 }
             }
             $response['content'] = $this->renderAjax('create', ['model' => $model]);
@@ -108,7 +109,7 @@ class ScienceController extends Controller
     }
 
     /**
-     * Updates an existing Science model.
+     * Updates an existing Payment model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return array|Response
@@ -127,7 +128,7 @@ class ScienceController extends Controller
     }
 
     /**
-     * Deletes an existing Science model.
+     * Deletes an existing Payment model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return Response
@@ -141,15 +142,15 @@ class ScienceController extends Controller
     }
 
     /**
-     * Finds the Science model based on its primary key value.
+     * Finds the Payment model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Science the loaded model
+     * @return Payment the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Science::findOne(['id' => $id])) !== null) {
+        if (($model = Payment::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

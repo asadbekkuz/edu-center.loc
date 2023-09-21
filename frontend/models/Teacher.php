@@ -2,7 +2,10 @@
 
 namespace frontend\models;
 
+use common\models\User;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "teacher".
@@ -25,12 +28,27 @@ use Yii;
  */
 class Teacher extends \yii\db\ActiveRecord
 {
+
+    const STATUS_DELETED = 0;
+    const STATUS_INACTIVE = 9;
+    const STATUS_ACTIVE = 10;
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
         return 'teacher';
+    }
+    public function behaviors()
+    {
+        return [
+            [
+                'class' =>TimestampBehavior::class,
+            ],
+            [
+                'class' => BlameableBehavior::class
+            ]
+        ];
     }
 
     /**
@@ -55,10 +73,10 @@ class Teacher extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'user_id' => Yii::t('app', 'User ID'),
-            'science_id' => Yii::t('app', 'Science ID'),
-            'salary' => Yii::t('app', 'Salary'),
-            'status' => Yii::t('app', 'Status'),
+            'user_id' => Yii::t('app', 'Xodim'),
+            'science_id' => Yii::t('app', 'Yo\'nalish'),
+            'salary' => Yii::t('app', 'Maosh'),
+            'status' => Yii::t('app', 'Holat'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_by' => Yii::t('app', 'Created By'),
@@ -114,5 +132,17 @@ class Teacher extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+    /**
+     *  Get status label
+     * @return array
+     */
+    public static function getStatusLabels(): array
+    {
+        return [
+            self::STATUS_ACTIVE => Yii::t('app','ACTIVE'),
+            self::STATUS_DELETED => Yii::t('app','DELETED'),
+            self::STATUS_INACTIVE => Yii::t('app','INACTIVE'),
+        ];
     }
 }

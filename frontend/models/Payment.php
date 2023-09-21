@@ -2,41 +2,35 @@
 
 namespace frontend\models;
 
-use common\components\db\CustomActiveRecord;
-use common\models\User;
-use frontend\models\query\GroupQuery;
+use frontend\models\query\PaymentQuery;
 use Yii;
 
 /**
- * This is the model class for table "group".
+ * This is the model class for table "payment".
  *
  * @property int $id
- * @property int|null $student_id
- * @property int|null $course_id
+ * @property int $student_id
+ * @property int $course_id
+ * @property float $price
  * @property int|null $status
  * @property int|null $created_at
  * @property int|null $updated_at
- * @property int|null $created_by
- * @property int|null $updated_by
  *
  * @property Course $course
- * @property User $createdBy
  * @property Student $student
- * @property User $updatedBy
  */
-class Group extends CustomActiveRecord
+class Payment extends \yii\db\ActiveRecord
 {
 
-    const GROUP_INACTIVE = 0;
-    const GROUP_ACTIVE = 1;
+    const PAYMENT_DEBTOR = 0;
+    const PAYMENT_PAID = 1;
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'group';
+        return 'payment';
     }
-
 
     /**
      * {@inheritdoc}
@@ -44,11 +38,11 @@ class Group extends CustomActiveRecord
     public function rules()
     {
         return [
-            [['student_id', 'course_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['student_id', 'course_id', 'price'], 'required'],
+            [['student_id', 'course_id', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['price'], 'number'],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::class, 'targetAttribute' => ['course_id' => 'id']],
-            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::class, 'targetAttribute' => ['student_id' => 'id']],
-            [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
         ];
     }
 
@@ -61,18 +55,17 @@ class Group extends CustomActiveRecord
             'id' => Yii::t('app', 'ID'),
             'student_id' => Yii::t('app', 'Student ID'),
             'course_id' => Yii::t('app', 'Course ID'),
+            'price' => Yii::t('app', 'Price'),
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
-            'created_by' => Yii::t('app', 'Created By'),
-            'updated_by' => Yii::t('app', 'Updated By'),
         ];
     }
 
     /**
      * Gets query for [[Course]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return \yii\db\ActiveQuery|CourseQuery
      */
     public function getCourse()
     {
@@ -80,19 +73,9 @@ class Group extends CustomActiveRecord
     }
 
     /**
-     * Gets query for [[CreatedBy]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCreatedBy()
-    {
-        return $this->hasOne(User::class, ['id' => 'created_by']);
-    }
-
-    /**
      * Gets query for [[Student]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return \yii\db\ActiveQuery|StudentQuery
      */
     public function getStudent()
     {
@@ -100,17 +83,11 @@ class Group extends CustomActiveRecord
     }
 
     /**
-     * Gets query for [[UpdatedBy]].
-     *
-     * @return \yii\db\ActiveQuery
+     * {@inheritdoc}
+     * @return PaymentQuery the active query used by this AR class.
      */
-    public function getUpdatedBy()
-    {
-        return $this->hasOne(User::class, ['id' => 'updated_by']);
-    }
-
     public static function find()
     {
-        return (new GroupQuery(get_called_class()));
+        return new PaymentQuery(get_called_class());
     }
 }
