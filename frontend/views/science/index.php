@@ -1,6 +1,7 @@
 <?php
 
 use common\components\CustomActionColumn;
+use frontend\models\Science;
 use yii\bootstrap4\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -41,11 +42,21 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
 
-                    'id',
+//                    'id',
                     'name',
-                    'status',
-//                    'created_at',
-//                    'updated_at',
+                    [
+                        'attribute' => 'status',
+                        'value' => fn($model) => $model->showStatus($model->status),
+                        'filter' => Html::activeDropDownList($searchModel,
+                            'status',
+                            Science::filterDropDown(),
+                            [
+                                'class'=>'form-control',
+                                'prompt' => '']),
+                        'format' => 'html',
+                    ],
+                    'created_at:datetime',
+                    'updated_at:datetime',
 //                    'created_by',
 //                    'updated_by',
                     [

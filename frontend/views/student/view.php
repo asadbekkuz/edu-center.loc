@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var frontend\models\Student $model */
 
-$this->title = $model->id;
+$this->title = $model->first_name.' '.$model->last_name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Students'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary update-button']) ?>
         <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -29,17 +29,23 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+//            'id',
             'first_name',
             'last_name',
             'phone',
             'email:email',
             'address',
-            'status',
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by',
+//            'status',
+            'created_at:datetime',
+            'updated_at:datetime',
+            [
+                'attribute' => 'created_by',
+                'value' => fn($model) => $model->createdBy->username
+            ],
+            [
+                'attribute' => 'created_by',
+                'value' => fn($model) => $model->updatedBy->username
+            ]
         ],
     ]) ?>
 

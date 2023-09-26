@@ -4,6 +4,8 @@ namespace frontend\models;
 
 use frontend\models\query\PaymentQuery;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "payment".
@@ -21,15 +23,30 @@ use Yii;
  */
 class Payment extends \yii\db\ActiveRecord
 {
-
     const PAYMENT_DEBTOR = 0;
     const PAYMENT_PAID = 1;
+
+    public function behaviors()
+    {
+        return [
+            ['class' => TimestampBehavior::class],
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
         return 'payment';
+    }
+
+    public static function filterDropDown()
+    {
+        return [
+            self::PAYMENT_PAID => 'PAID',
+            self::PAYMENT_DEBTOR => 'DEBTOR',
+        ];
     }
 
     /**
@@ -53,8 +70,8 @@ class Payment extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'student_id' => Yii::t('app', 'Student ID'),
-            'course_id' => Yii::t('app', 'Course ID'),
+            'student_id' => Yii::t('app', 'Student'),
+            'course_id' => Yii::t('app', 'Course'),
             'price' => Yii::t('app', 'Price'),
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -89,5 +106,22 @@ class Payment extends \yii\db\ActiveRecord
     public static function find()
     {
         return new PaymentQuery(get_called_class());
+    }
+    
+    /**
+     * 
+     *  Show status with badges, 
+     */
+    public function showStatus($status)
+    {
+        $badge = '<span class="badge badge-dark">UNKOWN</span>';
+        if($status == '0')
+        {
+            $badge = '<span class="badge badge-secondary">DEBTOR</span>';
+        }elseif($status == '1')
+        {
+            $badge = '<span class="badge badge-success">PAID</span>';
+        }
+        return $badge;
     }
 }

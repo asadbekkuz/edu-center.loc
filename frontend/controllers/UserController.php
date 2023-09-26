@@ -74,6 +74,7 @@ class UserController extends \yii\web\Controller
     {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->get());
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel
@@ -191,16 +192,5 @@ class UserController extends \yii\web\Controller
             Yii::$app->session->setFlash('information', 'User\'s Information was not saved');
         }
         return $this->redirect('profile');
-    }
-
-    /** Upload image */
-    public function actionImage()
-    {
-        if (Yii::$app->request->isPost) {
-            echo "<pre>";
-            print_r(Yii::$app->request->post());
-            echo "</pre>";
-            exit();
-        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Course;
 use frontend\models\Group;
 use frontend\models\Payment;
 use frontend\models\Student;
@@ -62,12 +63,14 @@ class SiteController extends Controller
         $activeStudent = Student::find()->active()->count();
         $groups = Group::find()->active()->count();
         $paymentDebtors = Payment::find()->debtor()->count();
+        $dateTime = Course::getDateTime();
 
         return $this->render('index',[
             'lidStudent' => $lidStudent,
             'activeStudent' => $activeStudent,
             'groups' =>$groups,
-            'paymentDebtor' => $paymentDebtors
+            'paymentDebtor' => $paymentDebtors,
+            'dateTime'=>json_encode($dateTime)
         ]);
     }
 

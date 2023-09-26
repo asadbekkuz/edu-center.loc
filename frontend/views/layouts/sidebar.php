@@ -39,9 +39,7 @@ use yii\helpers\Url;
                         'label' => Yii::t('app', 'Xodimlar'),
                         'icon' => 'fas fa-user-friends',
                         'items' => [
-                            ['label' => Yii::t('app','Barcha Xodimlar'), 'url' => Url::to(['/user/index']), 'iconStyle' => 'far'],
-                            ['label' => Yii::t('app', 'Teacher'), 'url' => Url::to(['/teacher/index']), 'iconStyle' => 'far'],
-                            ['label' => Yii::t('app','Xabar yuborish'), 'url' => Url::to(['/user/message']), 'iconStyle' => 'far'],
+                            ['label' => Yii::t('app','Barcha Xodimlar'), 'url' => Url::to(['/employee/index']), 'iconStyle' => 'far'],
                         ],
                         'visible' => Yii::$app->user->can('admin')
                     ],
@@ -61,7 +59,7 @@ use yii\helpers\Url;
                         'items' => [
                             ['label' => Yii::t('app','O\'quvchilar'), 'url' => Url::to(['/student/index']), 'iconStyle' => 'far'],
                             ['label' => Yii::t('app', 'To\'lov'), 'url' => Url::to(['/payment/index']), 'iconStyle' => 'far'],
-                            ['label' => Yii::t('app','Xabar yuborish'), 'url' => Url::to(['/student/message']), 'iconStyle' => 'far'],
+//                            ['label' => Yii::t('app','Xabar yuborish'), 'url' => Url::to(['/student/message']), 'iconStyle' => 'far'],
                         ],
                         'visible' => Yii::$app->user->can('admin') || Yii::$app->user->can('teacher')
                     ],
@@ -72,12 +70,9 @@ use yii\helpers\Url;
                         'visible' => Yii::$app->user->can('admin')
                     ],
                     [
-                        'label' => Yii::t('app', 'Setting'),
-                        'icon' => 'fas fa-cogs',
-                        'items' => [
-                            ['label' => Yii::t('app','Profile'), 'url' => Url::to(['/user/profile']), 'iconStyle' => 'far'],
-                            ['label' => Yii::t('app','Log out'), 'url' => Url::to(['/site/logout']), 'iconStyle' => 'far'],
-                        ],
+                        'label' => Yii::t('app', 'Log out'),
+                        'icon' => "fas fa-sign-out-alt",
+                        'url' => Url::to(['/site/logout']),
                         'visible' => Yii::$app->user->can('admin') || Yii::$app->user->can('teacher')
                     ]
                 ],

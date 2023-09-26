@@ -14,7 +14,7 @@ function send(_url,_data = null)
         data: _data,
         dataType: "json",
         success:function (response){
-            if(response.status == false)
+            if(response.status === false)
             {
                 $('#modal').modal('show').find('#modal-content').html(response.content);
                 $('#saveButton').on('click',function (event) {
@@ -26,7 +26,8 @@ function send(_url,_data = null)
                 $('#modal').modal('hide');
                 $.pjax.reload({container: '#pjaxGrid'});
             }
-        }
+        },
+
     })
 }
 

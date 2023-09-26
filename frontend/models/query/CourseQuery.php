@@ -11,4 +11,9 @@ class CourseQuery extends ActiveQuery
     {
         return $this->orWhere(['status'=>Course::STATUS_INACTIVE])->orWhere(['status'=>Course::STATUS_ACTIVE]);
     }
+
+    public function getDateTime()
+    {
+        return $this->select(['name','start_date','end_date'])->asArray();
+    }
 }

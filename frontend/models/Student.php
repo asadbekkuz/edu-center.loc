@@ -5,6 +5,8 @@ namespace frontend\models;
 use common\models\User;
 use frontend\models\query\StudentQuery;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "student".
@@ -32,12 +34,20 @@ class Student extends \yii\db\ActiveRecord
     const STUDENT_ACTIVE = 1;
 
 
+    public function behaviors()
+    {
+        return [
+            ['class'=>TimestampBehavior::class],
+            ['class'=>BlameableBehavior::class],
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'student';
+        return '{{%student%}}';
     }
 
     /**

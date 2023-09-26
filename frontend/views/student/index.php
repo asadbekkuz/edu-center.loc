@@ -44,16 +44,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
 
-                    'id',
+//                    'id',
                     'first_name',
                     'last_name',
                     'phone',
                     'email:email',
                     'address',
-                    'status',
-                    //'created_at',
-                    //'updated_at',
-                    //'created_by',
+//                    'status',
+                    'created_at:datetime',
+//                    'updated_at:datetime',
+                    [
+                        'attribute' => 'created_by',
+                        'value' => fn($model) => $model->createdBy->username
+                    ],
                     //'updated_by',
                     [
                         'class' => CustomActionColumn::class,

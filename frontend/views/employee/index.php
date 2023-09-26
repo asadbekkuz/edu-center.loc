@@ -1,25 +1,26 @@
 <?php
 
-use frontend\models\Payment;
+use frontend\models\Employee;
 use yii\bootstrap4\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 
 /** @var yii\web\View $this */
-/** @var frontend\models\PaymentSearch $searchModel */
+/** @var frontend\models\EmployeeSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = Yii::t('app', 'Payments');
+$this->title = Yii::t('app', 'Employees');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="payment-index">
+<div class="employee-index">
     <div class="card">
         <div class="card-body">
             <p>
-                <?= Html::a('<i class="fas fa-plus-circle"></i>  ' . Yii::t('app', 'Add Payment'),
-                    Url::to(['/payment/create']),
+                <?= Html::a('<i class="fas fa-plus-circle"></i>  ' . Yii::t('app', 'Create Employee'),
+                    Url::to(['/employee/create']),
                     [
                         'class' => 'btn btn-outline-success',
                         'id' => 'create-button'
@@ -43,27 +44,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
 //                    'id',
                     [
-                        'attribute'=>'student_id',
-                        'value' => fn($model) => $model->student->first_name.' '.$model->student->last_name
+                        'attribute' =>'user_id',
+                        'value' => fn($model) => $model->user->username
                     ],
                     [
-                        'attribute' => 'course_id',
-                        'value' => fn($model) => $model->course->name
+                        'attribute' => 'science_id',
+                        'value' => fn($model) => $model->science->name
                     ],
-                    'price',
-                    'created_at:datetime',
+                    'first_name',
+                    'last_name',
+                    'address',
+                    'phone',
+                    //'salary',
                     [
                         'attribute' => 'status',
                         'value' => fn($model) => $model->showStatus($model->status),
-                        'filter' => Html::activeDropDownList($searchModel,
-                            'status',
-                            Payment::filterDropDown(),
-                            [
-                                'class'=>'form-control',
-                                'prompt' => ' ']),
-                        'format' => 'html',
+                        'format' => 'raw'
                     ],
+                    //'created_at',
                     //'updated_at',
+                    //'created_by',
+                    //'updated_by',
                     [
                         'class' => \common\components\CustomActionColumn::class,
                     ],
@@ -72,5 +73,5 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <?php Pjax::end(); ?>
         </div>
-    </div>
+    </div
 </div>

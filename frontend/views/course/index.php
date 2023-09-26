@@ -47,11 +47,17 @@ $this->title = 'Course';
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
                 'name',
-                'science_id',
-                'teacher_id',
-                'room_id',
+                [
+                    'attribute' => 'science_id',
+                    'value' => fn($model) => $model->science->name
+                ],
+                [
+                    'attribute' => 'teacher_id',
+                    'value' => fn($model) => $model->employee->first_name.' '.$model->employee->last_name
+                ],
+                'start_date',
+                'end_date',
                 'price',
-                'capacity',
                 [
                     'attribute' => 'status',
                     'value' => fn($model) => $model->showStatus($model->status),

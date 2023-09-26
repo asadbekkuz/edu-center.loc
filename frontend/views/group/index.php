@@ -1,76 +1,69 @@
 <?php
 
-/** @var $model \frontend\models\Group */
-/** @var $newModel \frontend\models\Group */
-/** @var $pagination \yii\data\Pagination */
-/** @var $sort  \yii\data\Sort */
-
-use yii\bootstrap4\LinkPager;
+use frontend\models\Group;
+use yii\bootstrap4\Modal;
+use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\grid\ActionColumn;
+use yii\grid\GridView;
+use yii\widgets\Pjax;
 
+/** @var yii\web\View $this */
+/** @var frontend\models\GroupSearch $searchModel */
+/** @var yii\data\ActiveDataProvider $dataProvider */
+
+$this->title = Yii::t('app', 'Groups');
+$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="card">
-    <div class="card-body">
+<div class="group-index">
+    <div class="card">
+        <div class="card-body">
+            <p>
+                <?= Html::a('<i class="fas fa-plus-circle"></i>  ' . Yii::t('app', 'Create Course'),
+                    Url::to(['/group/create']), [
+                        'class' => 'btn btn-outline-success',
+                        'id' => 'create-button'
+                    ]) ?>
+            </p>
+            <?php Modal::begin([
+                'id' => 'modal',
+                'size' => Modal::SIZE_LARGE
+            ]);
 
-        <p>
-            <button class="btn btn-outline-success" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                <i class="fas fa-plus"></i> <?= Yii::t('app','Create Group');?>
-            </button>
-        </p>
+            echo "<div id='modal-content'></div>";
 
-        <div class="collapse" id="collapseExample">
-            <div class="card card-body">
-                <?= Yii::$app->session->has('danger') ? Yii::$app->session->get('danger') : ''; ?>
-                <?= $this->render('_form', [
-                    'model' => $newModel,
-                ]) ?>
-            </div>
+            Modal::end(); ?>
+
+            <?php Pjax::begin(['id' => 'pjaxGrid']); ?>
+
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
+
+//                'id',
+                    [
+                        'attribute'=>'student_id',
+                        'value' => fn($model) => $model->student->first_name.' '.$model->student->last_name
+                    ],
+                    [
+                        'attribute' => 'course_id',
+                        'value' => fn($model) => $model->course->name
+                    ],
+//                'status',
+                    'created_at:datetime',
+                    //'updated_at',
+                    //'created_by',
+                    //'updated_by',
+                    [
+                        'class' => \common\components\CustomActionColumn::class,
+                    ],
+                ],
+            ]); ?>
+
+            <?php Pjax::end(); ?>
         </div>
-
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th><?= Yii::t('app',$sort->link('student_id'));?></th>
-                <th><?= Yii::t('app',$sort->link('course_id'));?></th>
-                <th><?= Yii::t('app',$sort->link('status'));?></th>
-                <th><?= Yii::t('app',$sort->link('created_at'));?></th>
-                <th><?= Yii::t('app',$sort->link('updated_at'));?></th>
-                <th><?= Yii::t('app',$sort->link('created_by'));?></th>
-                <th><?= Yii::t('app',$sort->link('updated_by'));?></th>
-                <th><a href="javascript:void(0)">Actions</a></th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($model as $value): ?>
-                <tr>
-                    <td><?= $value->student_id ?></td>
-                    <td><?= $value->course_id ?></td>
-                    <td><?= $value->status ?></td>
-                    <td><?= $value->created_at ?></td>
-                    <td><?= $value->updated_at ?></td>
-                    <td><?= $value->created_by ?></td>
-                    <td><?= $value->updated_by ?></td>
-
-                    <td style="display: flex;">
-                        <a href="<?= Url::to(['group/update','id'=>$value->id])?>" class="btn btn-outline-info"><i class="fas fa-pen"></i></a>
-                        <a href="<?= Url::to(['group/delete','id'=>$value->id])?>" class="btn btn-outline-danger mx-2"><i class="fas fa-trash"></i></a>
-                        <a href="<?= Url::to(['group/view','id'=>$value->id])?>" class="btn btn-outline-success"><i class="fas fa-eye"></i></a>
-                    </td>
-
-                </tr>
-            <?php endforeach;?>
-            </tbody>
-        </table>
     </div>
 </div>
-
-<?php
-
-echo LinkPager::widget([
-    'pagination' =>$pagination,
-    'options' => [
-        'class' => 'mt-2'
-    ]
-])
-?>
 

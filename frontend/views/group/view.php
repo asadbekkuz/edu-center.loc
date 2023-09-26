@@ -1,47 +1,55 @@
 <?php
 
 use yii\helpers\Html;
-use yii\web\YiiAsset;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
-/** @var \frontend\models\Group $model */
+/** @var frontend\models\Group $model */
 
-
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Group'), 'url' => ['index']];
+$this->title = $model->id;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Groups'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-YiiAsset::register($this);
+\yii\web\YiiAsset::register($this);
 ?>
-<div class="post-view">
-    <div class="card">
-        <div class="card-body">
-            <p>
-                <?= Html::a("<i class='fas fa-pen'> </i>  ".Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-outline-primary']) ?>
-                <?= Html::a("<i class='fas fa-trash'> </i> ".Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-                    'class' => 'btn btn-outline-danger',
-                    'data' => [
-                        'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                        'method' => 'post',
-                    ],
-                ]) ?>
-            </p>
+<div class="group-view">
 
-            <?= DetailView::widget([
-                'model' => $model,
-                'attributes' => [
-                    'student_id',
-                    'course_id',
-                    [
-                        'attribute' => 'status',
-                        'value' => fn($model) => $model->showStatus($model->status),
-                        'format'=>'html'
-                    ],
-                    'created_at',
-                    'updated_at',
-                    'created_by',
-                    'updated_by'
-                ],
-            ]) ?>
-        </div>
-    </div>
+    <h3><?= Html::encode($this->title) ?></h3>
+
+    <p>
+        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary update-button']) ?>
+        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                'method' => 'post',
+            ],
+        ]) ?>
+    </p>
+
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+//            'id',
+            [
+                'attribute'=>'student_id',
+                'value' => fn($model) => $model->student->first_name.' '.$model->student->last_name
+            ],
+            [
+                'attribute' => 'course_id',
+                'value' => fn($model) => $model->course->name
+            ],
+            'status',
+            'created_at:datetime',
+            'updated_at:datetime',
+            [
+                'attribute' => 'created_by',
+                'value' => fn($model) => $model->createdBy->username
+            ],
+            [
+                'attribute' => 'updated_by',
+                'value' => fn($model) => $model->updatedBy->username
+            ]
+        ],
+    ]) ?>
+
 </div>

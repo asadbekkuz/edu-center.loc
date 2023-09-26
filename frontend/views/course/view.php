@@ -13,10 +13,10 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="course-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3><?= Html::encode($this->title) ?></h3>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary update-button']) ?>
         <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -29,18 +29,33 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+//            'id',
             'name',
-            'science_id',
-            'teacher_id',
-            'room_id',
+            [
+                'attribute' => 'science_id',
+                'value' => fn($model) => $model->science->name
+            ],
+            [
+                'attribute' => 'teacher_id',
+                'value' => fn($model) => $model->employee->first_name.' '.$model->employee->last_name
+            ],
+            [
+                'attribute' => 'room_id',
+                'value' => fn($model) => $model->room->name
+            ],
             'price',
             'capacity',
             'status',
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by',
+            'created_at:datetime',
+            'updated_at:datetime',
+            [
+                'attribute' => 'created_by',
+                'value' => fn($model) => $model->created->username
+            ],
+            [
+                'attribute' => 'updated_by',
+                'value' => fn($model) => $model->updated->username
+            ]
         ],
     ]) ?>
 

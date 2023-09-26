@@ -2,8 +2,8 @@
 
 namespace frontend\models;
 
-use common\models\User;
 use Yii;
+use common\models\User;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 
@@ -25,6 +25,8 @@ use yii\behaviors\TimestampBehavior;
  */
 class Science extends \yii\db\ActiveRecord
 {
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 1;
     /**
      * {@inheritdoc}
      */
@@ -32,6 +34,15 @@ class Science extends \yii\db\ActiveRecord
     {
         return 'science';
     }
+
+    public static function filterDropDown()
+    {
+        return [
+            self::STATUS_INACTIVE => 'INACTIVE',
+            self::STATUS_ACTIVE => 'ACTIVE'
+        ];
+    }
+
     public function behaviors()
     {
         return [
@@ -88,7 +99,7 @@ class Science extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCreatedBy()
+    public function getCreated()
     {
         return $this->hasOne(User::class, ['id' => 'created_by']);
     }
@@ -108,8 +119,21 @@ class Science extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUpdatedBy()
+    public function getUpdated()
     {
         return $this->hasOne(User::class, ['id' => 'updated_by']);
+    }
+
+    public function showStatus($status)
+    {
+        $badge = '<span class="badge badge-dark">UNKOWN</span>';
+        if($status == '0')
+        {
+            $badge = '<span class="badge badge-secondary">INACTIVE</span>';
+        }elseif($status == '1')
+        {
+            $badge = '<span class="badge badge-success">ACTIVE</span>';
+        }
+        return $badge;
     }
 }

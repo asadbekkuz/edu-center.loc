@@ -17,8 +17,6 @@ class m130524_201442_init extends CustomMigration
             'username' => $this->string()->notNull()->unique(),
             'first_name' => $this->string(100)->notNull(),
             'last_name' => $this->string(100)->notNull(),
-            'phone' => $this->string(100),
-            'address' => $this->string(250),
             'auth_key' => $this->string(32)->notNull(),
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),

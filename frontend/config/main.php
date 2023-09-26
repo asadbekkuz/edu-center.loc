@@ -18,17 +18,11 @@ return [
             'csrfParam' => '_csrf-frontend',
             'baseUrl' => ''
         ],
-//        'view' => [
-//            'theme' => [
-//                'pathMap' => [
-//                    '@app/views' => '@vendor/hail812/yii2-adminlte3/src/views'
-//                ],
-//            ],
-//        ],
         'user' => [
             'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'authTimeout' => 3600
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
@@ -67,7 +61,7 @@ return [
                     ],
                 ],
             ],
-        ],
+        ]
     ],
     'as beforeRequest' => [
         'class' => 'common\components\i18n\Language'

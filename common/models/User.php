@@ -15,16 +15,12 @@ use yii\web\IdentityInterface;
  * @property int $id
  * @property string $username
  * @property string $image
- * @property string $first_name
- * @property string $last_name
- * @property string|null $phone
- * @property string|null $address
  * @property string $auth_key
- * @property string $password
+ * @property string $old_password
+ * @property string $new_password
  * @property string $password_hash
  * @property string|null $password_reset_token
  * @property string $email
- * @property string $type
  * @property int $status
  * @property int $created_at
  * @property int $updated_at
@@ -32,7 +28,6 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    public $imageFile;
     public $new_password;
     public $old_password;
     const STATUS_DELETED = 0;
@@ -67,16 +62,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username','email','password'], 'required'],
+            [['username'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'password_hash','password','old_password','new_password', 'password_reset_token', 'email', 'verification_token','new_password','old_password'], 'string', 'max' => 255],
-            ['old_password', 'compare', 'compareAttribute'=>'password', 'message'=>"Passwords don't match" ],
-            [['first_name', 'last_name', 'phone','type','image'], 'string', 'max' => 100],
-            ['imageFile','file','extensions'=>'png,jpg','maxSize' => 1024 * 10 * 8],
-            [['address'], 'string', 'max' => 250],
+            [['username', 'password_hash','old_password','new_password', 'password_reset_token', 'email', 'verification_token','new_password','old_password'], 'string', 'max' => 255],
+            ['old_password', 'compare', 'compareAttribute'=>'new_password', 'message'=>"Passwords don't match" ],
             [['auth_key'], 'string', 'max' => 32],
-            [['username'], 'unique'],
-            [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
         ];
     }
@@ -238,12 +228,6 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return new UserQuery(get_called_class());
     }
-
-    public function beforeSave($insert)
-    {
-        $this->setPassword($this->password);
-        return parent::beforeSave($insert);
-    }
     /**
      *  Get status label
      * @return array
@@ -308,13 +292,4 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public function afterSave($insert, $changedAttributes)
-    {
-        if($this->isNewRecord){
-            $auth = \Yii::$app->authManager;
-            $authorRole = $auth->getRole('admin');
-            $auth->assign($authorRole, $this->getId());
-        }
-        parent::afterSave($insert, $changedAttributes);
-    }
 }

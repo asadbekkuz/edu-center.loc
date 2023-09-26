@@ -15,29 +15,28 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property int $id
  * @property string $name
+ * @property string $start_date
+ * @property string $end_date
  * @property int $science_id
  * @property int $teacher_id
  * @property int $room_id
  * @property float $price
- * @property int|null $capacity
  * @property int|null $status
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $created_by
  * @property int|null $updated_by
- *
  * @property User $createdBy
  * @property Group[] $groups
  * @property Room $room
  * @property Science $science
- * @property Teacher $teacher
+ * @property Employee $employee
  * @property User $updatedBy
  */
 class Course extends CustomActiveRecord
 {
-    const STATUS_DELETED = 0;
-    const STATUS_INACTIVE = 9;
-    const STATUS_ACTIVE = 10;
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 1;
     /**
      * {@inheritdoc}
      */
@@ -54,6 +53,20 @@ class Course extends CustomActiveRecord
         ];
     }
 
+    public static function getDateTime()
+    {
+        $data = [];
+        $dateTime = self::find()->getDateTime()->all();
+        for ($i=0;$i<count($dateTime);$i++){
+            $data[$i]['title'] = $dateTime[$i]['name'];
+            $data[$i]['start'] = str_replace(' ','T',$dateTime[$i]['start_date']);
+            $data[$i]['end'] = str_replace(' ','T',$dateTime[$i]['end_date']);
+            $data[$i]['constraint'] = 'availableForMeeting';
+            $data[$i]['color'] = '#257e4a';
+        }
+        return array_values($data);
+    }
+
     public function behaviors()
     {
         return [
@@ -65,7 +78,6 @@ class Course extends CustomActiveRecord
     public static function getStatusLabels(): array
     {
         return [
-            self::STATUS_DELETED => Yii::t('app','DELETED'),
             self::STATUS_INACTIVE => Yii::t('app','INACTIVE'),
             self::STATUS_ACTIVE => Yii::t('app','ACTIVE'),
         ];
@@ -75,11 +87,8 @@ class Course extends CustomActiveRecord
         $badge = '<span class="badge badge-dark">UNKOWN</span>';
         if($status == '0')
         {
-            $badge = '<span class="badge badge-danger">DELETED</span>';
-        }elseif($status == '9')
-        {
             $badge = '<span class="badge badge-secondary">INACTIVE</span>';
-        }elseif($status == '10')
+        }elseif($status == '1')
         {
             $badge = '<span class="badge badge-success">ACTIVE</span>';
         }
@@ -92,13 +101,14 @@ class Course extends CustomActiveRecord
     {
         return [
             [['name', 'science_id', 'teacher_id', 'room_id', 'price'], 'required'],
-            [['science_id', 'teacher_id', 'room_id', 'capacity', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['science_id', 'teacher_id', 'room_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['start_date','end_date'],'datetime'],
             [['price'], 'number'],
             [['name'], 'string', 'max' => 100],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['room_id'], 'exist', 'skipOnError' => true, 'targetClass' => Room::class, 'targetAttribute' => ['room_id' => 'id']],
             [['science_id'], 'exist', 'skipOnError' => true, 'targetClass' => Science::class, 'targetAttribute' => ['science_id' => 'id']],
-            [['teacher_id'], 'exist', 'skipOnError' => true, 'targetClass' => Teacher::class, 'targetAttribute' => ['teacher_id' => 'id']],
+            [['teacher_id'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::class, 'targetAttribute' => ['teacher_id' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
         ];
     }
@@ -111,11 +121,12 @@ class Course extends CustomActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
-            'science_id' => Yii::t('app', 'Science ID'),
-            'teacher_id' => Yii::t('app', 'Teacher ID'),
-            'room_id' => Yii::t('app', 'Room ID'),
+            'start_date' => Yii::t('app', 'Start Date'),
+            'end_date' => Yii::t('app', 'End Date'),
+            'science_id' => Yii::t('app', 'Science'),
+            'teacher_id' => Yii::t('app', 'Employee'),
+            'room_id' => Yii::t('app', 'Room'),
             'price' => Yii::t('app', 'Price'),
-            'capacity' => Yii::t('app', 'Capacity'),
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
@@ -129,7 +140,7 @@ class Course extends CustomActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCreatedBy()
+    public function getCreated()
     {
         return $this->hasOne(User::class, ['id' => 'created_by']);
     }
@@ -165,13 +176,13 @@ class Course extends CustomActiveRecord
     }
 
     /**
-     * Gets query for [[Teacher]].
+     * Gets query for [[Employee]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTeacher()
+    public function getEmployee()
     {
-        return $this->hasOne(Teacher::class, ['id' => 'teacher_id']);
+        return $this->hasOne(Employee::class, ['id' => 'teacher_id']);
     }
 
     /**
@@ -179,7 +190,7 @@ class Course extends CustomActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUpdatedBy()
+    public function getUpdated()
     {
         return $this->hasOne(User::class, ['id' => 'updated_by']);
     }
@@ -188,6 +199,4 @@ class Course extends CustomActiveRecord
     {
         return new CourseQuery(get_called_class());
     }
-
-
 }

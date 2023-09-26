@@ -1,15 +1,15 @@
 <?php
 
-namespace frontend\models\search;
+namespace frontend\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use frontend\models\Course;
+use frontend\models\Employee;
 
 /**
- * CourseSearch represents the model behind the search form of `frontend\models\Course`.
+ * EmployeeSearch represents the model behind the search form of `frontend\models\Employee`.
  */
-class CourseSearch extends Course
+class EmployeeSearch extends Employee
 {
     /**
      * {@inheritdoc}
@@ -17,9 +17,9 @@ class CourseSearch extends Course
     public function rules()
     {
         return [
-            [['id', 'science_id', 'teacher_id', 'room_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
-            [['name'], 'safe'],
-            [['price'], 'number'],
+            [['id', 'user_id', 'science_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['first_name', 'last_name', 'address', 'phone'], 'safe'],
+            [['salary'], 'number'],
         ];
     }
 
@@ -41,7 +41,7 @@ class CourseSearch extends Course
      */
     public function search($params)
     {
-        $query = Course::find();
+        $query = Employee::find();
 
         // add conditions that should always apply here
 
@@ -60,10 +60,9 @@ class CourseSearch extends Course
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'user_id' => $this->user_id,
             'science_id' => $this->science_id,
-            'teacher_id' => $this->teacher_id,
-            'room_id' => $this->room_id,
-            'price' => $this->price,
+            'salary' => $this->salary,
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
@@ -71,7 +70,10 @@ class CourseSearch extends Course
             'updated_by' => $this->updated_by,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['like', 'first_name', $this->first_name])
+            ->andFilterWhere(['like', 'last_name', $this->last_name])
+            ->andFilterWhere(['like', 'address', $this->address])
+            ->andFilterWhere(['like', 'phone', $this->phone]);
 
         return $dataProvider;
     }

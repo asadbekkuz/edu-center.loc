@@ -24,4 +24,9 @@ class StudentQuery extends ActiveQuery
     {
         return $this->andWhere(['status' => Student::STUDENT_ACTIVE]);
     }
+
+    public function getByFullname()
+    {
+        return $this->select(['id','concat(first_name," ",last_name) as name']);
+    }
 }

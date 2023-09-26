@@ -50,18 +50,6 @@ $this->title = Yii::t('app','Xodim');;
                 'first_name',
                 'last_name',
                 [
-                    'attribute' => 'type',
-                    'label' => Yii::t('app','Lavozim'),
-                    'value' => fn($model) => $model->getPosition($model->type),
-                    'filter' => Html::activeDropDownList($searchModel,
-                        'type',
-                        User::getPositionLabel(),
-                        [
-                            'class'=>'form-control',
-                            'prompt' => 'select']),
-                    'format' => 'html',
-                ],
-                [
                     'attribute' => 'status',
                     'value' => fn($model) => $model->getStatus($model->status),
                     'filter' => Html::activeDropDownList($searchModel,

@@ -6,6 +6,8 @@ use common\components\db\CustomActiveRecord;
 use common\models\User;
 use frontend\models\query\GroupQuery;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "group".
@@ -29,6 +31,15 @@ class Group extends CustomActiveRecord
 
     const GROUP_INACTIVE = 0;
     const GROUP_ACTIVE = 1;
+
+    public function behaviors()
+    {
+        return [
+            ['class' => TimestampBehavior::class],
+            ['class' => BlameableBehavior::class]
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */

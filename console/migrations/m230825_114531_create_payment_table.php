@@ -33,7 +33,8 @@ class m230825_114531_create_payment_table extends Migration
             'payment',
             'student_id',
             'student',
-            'id'
+            'id',
+            'CASCADE'
         );
 
         $this->createIndex(
