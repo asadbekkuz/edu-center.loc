@@ -57,9 +57,18 @@ use yii\helpers\Url;
                         'label' => Yii::t('app', 'Student'),
                         'icon' => 'fas fa-user-graduate',
                         'items' => [
-                            ['label' => Yii::t('app','O\'quvchilar'), 'url' => Url::to(['/student/index']), 'iconStyle' => 'far'],
-                            ['label' => Yii::t('app', 'To\'lov'), 'url' => Url::to(['/payment/index']), 'iconStyle' => 'far'],
-//                            ['label' => Yii::t('app','Xabar yuborish'), 'url' => Url::to(['/student/message']), 'iconStyle' => 'far'],
+                            [
+                                    'label' => Yii::t('app','O\'quvchilar'),
+                                    'url' => Url::to(['/student/index']),
+                                    'iconStyle' => 'far'
+                            ],
+                            [
+                                'label' => Yii::t('app', 'To\'lov'),
+                                'url' => Url::to(['/payment/index']),
+                                'iconStyle' => 'far',
+                                'visible' => Yii::$app->user->can('admin')
+                            ],
+//
                         ],
                         'visible' => Yii::$app->user->can('admin') || Yii::$app->user->can('teacher')
                     ],
